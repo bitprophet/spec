@@ -52,10 +52,16 @@ and the member names are tweaked to read more like regular English:
 
 ## How do I use it?
 
-Install the plugin via `setup.py`, `pip`, or what have you. Then `nosetests` will expose these new additional options/flags:
+Install the plugin via `setup.py`, `pip`, or what have you. Then `nosetests`
+will expose these new additional options/flags:
 
-* `--with-spec`: enables the plugin and prints out your tests in specification format. Also automatically sets `--verbose` (i.e. the spec output is a verbose format.)
-* `--spec-color`: enables color output. Successes are green, failures/errors are red, and [skipped](http://nose.readthedocs.org/en/latest/plugins/skip.html) tests are yellow.
+* `--with-spec`: enables the plugin and prints out your tests in specification
+  format. Also automatically sets `--verbose` (i.e. the spec output is a
+  verbose format.)
+* `--no-spec-color`: disables color output. Normally, successes are green,
+  failures/errors are red, and
+  [skipped](http://nose.readthedocs.org/en/latest/plugins/skip.html) tests are
+  yellow.
 * `--spec-doctests`: enables (experimental) support for doctests.
 
 
