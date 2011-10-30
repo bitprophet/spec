@@ -74,13 +74,11 @@ in the above two gentlemen's names, respectively.
 
 This version of the plugin was created and distributed by Jeff Forcier, &copy;
 2011. It tweaks the original source to be Python 2.7 compatible, based on
-similar changes to another rehosted copy of `pinocchio` by [Phillip
-Oldham](https://github.com/unpluggd/pinocchio)` as well as a similar change
-needed for Jeff's updated copy of the
-[rudolf](https://github.com/bitprophet/rudolf) plugin. It also fixes a handful
-of bugs such as
+[similar](https://github.com/unpluggd/pinocchio/commit/de30d5f7868280a2b9e3545c48e68dd0d9a343a0)
+[changes](https://github.com/bitprophet/rudolf/commit/7c872e7deeff622de62a439b8e4dd807047c095e).
+It also fixes a handful of bugs such as broken
 [SkipTest](http://nose.readthedocs.org/en/latest/plugins/skip.html)
-compatibility.
+compatibility under Nose 1.x.
 
 
 ## What's the license?
