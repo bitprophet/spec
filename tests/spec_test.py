@@ -4,7 +4,7 @@
 import unittest
 import nose
 from nose.plugins import Plugin, PluginTester
-from pinocchio.spec import Spec
+from spec import Spec
 
 
 def prepend_in_each_line(string, prefix='    '):

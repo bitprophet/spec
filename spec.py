@@ -92,10 +92,19 @@ import re
 import types
 import unittest
 from StringIO import StringIO
+
+# Python 2.7: _WritelnDecorator moved.
 try:
     from unittest import _WritelnDecorator
 except ImportError:
     from unittest.runner import _WritelnDecorator
+
+# Python 2.7: nose uses unittest's builtin SkipTest class
+try:
+    SkipTest = unittest.case.SkipTest
+except AttributeError:
+    SkipTest = nose.SkipTest
+
 
 import nose
 from nose.plugins import Plugin
@@ -367,16 +376,16 @@ class Spec(Plugin):
         self._print_spec('red', test, 'FAILED')
 
     def addError(self, test, err):
-        def print_spec_func(color, message):
-            return lambda _: self._print_spec(color, test, message)
+        def blurt(color, label):
+            self._print_spec(color, test, label)
 
-        supported_error_types = [
-            (nose.DeprecatedTest , print_spec_func('yellow', 'DEPRECATED')),
-            (nose.SkipTest       , print_spec_func('yellow', 'SKIPPED')),
-            (True                , print_spec_func('red',    'ERROR')),
-        ]
-
-        dispatch_on_type(supported_error_types, err[1])
+        klass = err[0]
+        if issubclass(klass, nose.DeprecatedTest):
+            blurt('yellow', 'DEPRECATED')
+        elif issubclass(klass, SkipTest):
+            blurt('yellow', 'SKIPPED')
+        else:
+            blurt('red', 'ERROR')
 
     def afterTest(self, test):
         self.stream.capture()
