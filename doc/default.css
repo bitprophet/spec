@@ -1,0 +1,609 @@
+/*
+:Author: David Goodger
+:Contact: goodger@users.sourceforge.net
+:date: $Date: 2003/11/01 20:35:45 $
+:copyright: This stylesheet has been placed in the public domain.
+
+Adapted by Ian Bicking for the Webware Wiki.
+Tweaked by Eric Radman for webwareforpython.org
+Default cascading style sheet for the HTML output of Docutils.
+*/
+
+body {
+  background-color: #ffffff;
+  font-family: sans-serif;
+}
+
+ul li {
+  list-style-type: circle;
+}
+
+i, em {
+  font-family: serif;
+}
+
+a.target {
+  color: blue 
+}
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black 
+}
+
+a.reference { 
+  text-decoration: none;
+  border-bottom: 2px solid #0000ff;
+}
+
+a.reference:hover {
+  background-color: #cceeff;
+}
+
+span.nowiki { 
+  background-color: #ffff99;
+}
+
+a.wiki { 
+  text-decoration: none;
+  border-bottom: 2px solid #ff6600;
+}
+
+a.version { 
+  display: block;
+}
+
+a.version:hover {
+  text-decoration: none;
+  background-color: #ddddff;
+}
+
+cite {
+  font-style: normal;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+dd {
+  margin-bottom: 0.5em }
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.attention, div.caution, div.danger, div.error, div.hint,
+div.important, div.note, div.tip, div.warning {
+  /* margin: 2em ; */
+  background-color: #cccccc;
+  align: center;
+  /* width: 60%; */
+  /* border: medium outset ; */
+  padding: 3px;
+ }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  text-align: center }
+
+div.hint p.admonition-title, div.important p.admonition-title,
+div.note p.admonition-title, div.tip p.admonition-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em }
+
+div.footer, div.header {
+  font-size: smaller }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1, h2, h3, h4, h5, h6 {
+  padding: 4px;
+ }
+
+h1 {
+  /* background-color: #000000; */
+  /* border: medium solid black; */
+  /* color: #ffffff; */
+}
+
+h2 {
+  /* background-color: #666666; */
+  /* color: #ffffff; */
+  /* border: medium solid black; */
+}
+
+h3, h4, h5, h6 {
+  /* background-color: #cccccc; */
+  /* color: #000000; */
+}
+
+h1.title {
+  text-align: center;
+  /* background-color: #444499; */
+  /* color: #eeeeee; */
+  /* border: thick solid black; */
+  /* -moz-border-radius: 20px; */
+ }
+
+h2.subtitle {
+  text-align: center }
+
+hr {
+  width: 75% }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.first {
+  margin-top: 0 }
+
+p.label {
+  white-space: nowrap }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font-family: serif ;
+  font-size: 100% }
+
+pre.line-block {
+  font-family: serif ;
+  font-size: 100% }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em ;
+  background-color: #ffffff;
+  border: thin black solid;
+  padding: 5px;
+}
+
+span.classifier {
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-weight: bold }
+
+span.interpreted {
+  }
+
+span.option-argument {
+  font-style: italic }
+
+span.pre {
+  white-space: pre ;
+}
+
+span.problematic {
+  color: red }
+
+table {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.citation {
+  border-left: solid thin gray ;
+  padding-left: 0.5ex }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.footnote {
+  border-left: solid thin black ;
+  padding-left: 0.5ex }
+
+td, th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+td > p:first-child, th > p:first-child {
+  margin-top: 0em }
+
+th.docinfo-name, th.field-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap }
+
+h1 tt, h2 tt, h3 tt, h4 tt, h5 tt, h6 tt {
+  font-size: 100% }
+
+tt {
+  /* background-color: #eeeeee; */
+  color: #000066 }
+
+ul.auto-toc {
+  list-style-type: none }
+
+tr.even { 
+  background-color: #dddddd;
+}
+
+tr.header { 
+  background-color: #000066;
+  color: #ffffff;
+}
+
+/* Highlighting: */
+
+.function {color: #000077; font-weight: bold}
+.keyword {color: #004444;}
+.comment {color: #770000; font-style: italic}
+.normal {color: #000000;}
+.string {color: #006600;}
+.symbol {color: #000000;}
+
+.htmltag {color: #000077;}
+.htmlsymbol {color: #000000;}
+.htmlnormal {color: #000000;}
+.htmlcomment {color: #770000; font-style: italic}
+.htmlstring {color: #006600;}
+.htmlattr {color: #000000;}
+
+.stmlfunction {color: #000077; font-weight: bold}
+.stmlattr {color: #000000;}
+.stmlstring {color: #006600;}
+.stmlexpr {color: #004444;}
+
+/* Page tabs: */
+
+#page_nav ul {
+  display: block;
+  list-style: none outside;
+  padding: 0;
+  margin: 0 0 0 10px;
+  font-size: medium;
+}
+
+#page_nav li {
+  padding: 0;
+  margin: 0 4px 0 0;
+  border: 1px solid #cecbc6;
+  background-color: #000066;
+  color: #ffffff;
+  font-weight: bold;
+  /* the next 4 lines are magic */
+  display: block;
+  float: left;
+  position: relative;
+  bottom: 1.32em;
+}
+
+#page_nav a:link,
+#page_nav a:visited {
+  background-color: #000066;
+  color: #ffffff;
+  text-decoration: none;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+#page_nav a:hover {
+  background-color: #cecbc6;
+  color: #000066;
+}
+
+/* For some reason I can't get it to work without both the class
+   and ID */
+
+a.viewing#viewing { 
+  background-color: #ffffff;
+  color: #000066;
+  border: 1px solid #000066;
+}
+
+div#bottom_nav { 
+  border-top: 1px solid black;
+  background-color: #000066;
+  color: #ffffff;
+  padding: 0px 5px 1px 5px;
+}
+
+span.navgroup { 
+  border: 1px solid white;
+  font-weight: bold;
+}
+
+a#recentchanges_xml { 
+  padding-left: 0.25em;
+  padding-right: 0.5em;
+}
+
+a#recentchanges { 
+  padding-right: 0.25em;
+}
+
+.navgroup a { 
+  color: #ffffff;
+  text-decoration: none;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+select.navgroup { 
+  color: #ffffff;
+  background-color: #000066;
+  border: thin solid #ffffff;
+  font-weight: bold;
+}
+
+.navgroup a:hover { 
+  background-color: #cecbc6;
+  color: #000066;
+}
+
+
+/* Magic stuff to stop display:float */
+
+#page_navclear {
+  display: none;
+}
+html>body #page_navclear {
+  display: block;
+  clear: both;
+}
+
+/* Search results */
+
+dd.summary { 
+  font-size: small;
+}
+
+form#searchbar { 
+  border: 1px solid black;
+  background-color: #ddddff;
+  padding: 0.5em;
+}
+
+#searchbar tt { 
+  color: #000099;
+  font-weight: bold;
+}
+
+/* Diff results */
+
+.insert { background-color: #aaffaa }
+.delete { background-color: #ff8888 }
+.tagInsert { background-color: #004400; color: #ffffff }
+.tagDelete { background-color: #770000; color: #ffffff }
+.tagInsert tt { color: #99ff99 }
+
+/* summary/keyword pages */
+
+.modifiedDate { font-size: small }
+
+/* NotifyComponent */
+
+.notifyMessage { 
+  border: thin black solid;
+  width: 70%;
+  background-color: #006600;
+  color: #ffffff;
+}
+
+.notifyMessage a { 
+  color: #bbffbb;
+}
+
+.notifyMessage a:visited { 
+  color: #ddddff;
+}
+
+/* Login/forms */
+
+.loginForm input { 
+  border: thin solid #000066;
+}
+
+.formError { 
+  background-color: #660000;
+  color: #ffffff;
+}
+
+a.button {
+  background-color: #000066;
+  color: #ffffff;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 2px;
+  /* border: #cecbc6 groove medium; */
+  border: #000066 outset medium;
+}
+
+a.button:hover { 
+  background-color: #cecbc6;
+  color: #000000;
+  border: #cecbc6 outset medium;
+}
+
+a.menu {
+  display: block;
+  padding: 2px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a.menu:hover { 
+  background-color: #cccccc;
+}
+
+/* Related entries */
+
+.related { 
+  /* border-top: 2px solid black; */
+}
+
+.relatedEntry { 
+  border-bottom: 1px solid #999999;
+}
+
+.relatedDate { 
+  text-align: right;
+  font-size: small;
+}
+
+/* Menubar */
+
+div.menuBar,
+div.menuBar a.menuButton,
+div.menu,
+div.menu a.menuItem {
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 8pt;
+  font-style: normal;
+  font-weight: normal;
+  color: #000000;
+}
+
+div.menuBar {
+  background-color: #d0d0d0;
+  border: 2px solid;
+  border-color: #f0f0f0 #909090 #909090 #f0f0f0;
+  padding: 4px 2px 4px 2px;
+  text-align: left;
+}
+
+div.menuBar a.menuButton {
+  background-color: transparent;
+  border: 1px solid #d0d0d0;
+  color: #000000;
+  cursor: default;
+  left: 0px;
+  margin: 1px;
+  padding: 2px 6px 2px 6px;
+  position: relative;
+  text-decoration: none;
+  top: 0px;
+  z-index: 100;
+}
+
+div.menuBar a.menuButton:hover {
+  background-color: transparent;
+  border-color: #f0f0f0 #909090 #909090 #f0f0f0;
+  color: #000000;
+}
+
+div.menuBar a.menuButtonActive,
+div.menuBar a.menuButtonActive:hover {
+  background-color: #a0a0a0;
+  border-color: #909090 #f0f0f0 #f0f0f0 #909090;
+  color: #ffffff;
+  left: 1px;
+  top: 1px;
+}
+
+div.menu {
+  background-color: #d0d0d0;
+  border: 2px solid;
+  border-color: #f0f0f0 #909090 #909090 #f0f0f0;
+  left: 0px;
+  padding: 0px 1px 1px 0px;
+  position: absolute;
+  top: 0px;
+  visibility: hidden;
+  z-index: 101;
+}
+
+div.menu a.menuItem {
+  color: #000000;
+  cursor: default;
+  display: block;
+  padding: 3px 1em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+div.menu a.menuItem:hover, div.menu a.menuItemHighlight {
+  background-color: #000080;
+  color: #ffffff;
+}
+
+div.menu a.menuItem span.menuItemText {}
+
+div.menu a.menuItem span.menuItemArrow {
+  margin-right: -.75em;
+}
+
+div.menu div.menuItemSep {
+  border-top: 1px solid #909090;
+  border-bottom: 1px solid #f0f0f0;
+  margin: 4px 2px;
+}
+
+input.menuSearch { 
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 7pt;
+  padding: 0px;
+  border: 1px #909090 #f0f0f0 #f0f0f0 #909090;
+}
+
+div.menu span.disabled {
+  color: #666666;
+}
+
+div.source-code { 
+  background-color: #000000;
+  border: inset #999999 3px;
+  overflow: auto;
+}
+
+div.source-code a.source-link { 
+  float: right;
+}

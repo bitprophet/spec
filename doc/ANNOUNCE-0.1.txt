@@ -1,0 +1,43 @@
+ANNOUNCING pinocchio v0.1.
+
+pinocchio is a collection of plugins for the 'nose' unit testing framework;
+more about that here:
+
+     http://somethingaboutorange.com/mrl/projects/nose/
+
+Basic documentation for pinocchio is available at
+
+     http://darcs.idyll.org/~t/projects/pinocchio/doc/
+
+pinocchio currently contains five plugins:
+
+  * decorator -- allows you to assign tags to tests from a list file;
+
+  * figleafsections -- shows you which tests are executing what code;
+
+  * stopwatch -- lets you pick tests to run based on the last execution time;
+
+  * outputsave -- saves test stdout into individual files, tagged with
+	       success/failure.
+
+  * spec -- generates "specification" output from test class/method names.
+
+This is the first package release of pinocchio.
+
+Note that pinocchio *requires* setuptools to be installed, because that
+is how nose plugins work!
+
+You can install pinocchio with easy_install, or download this release at
+
+    http://darcs.idyll.org/~t/projects/pinocchio-0.1.tar.gz
+
+Documentation is included in the .tar.gz, and you can read the latest
+docs online at
+
+     http://darcs.idyll.org/~t/projects/pinocchio/doc/
+
+pinocchio is available under the MIT license.  It is Copyright (C)
+2006, 2007 C. Titus Brown, except for the spec plugin which is
+Copyright (C) 2007 Michal Kwiatkowski.
+
+--titus

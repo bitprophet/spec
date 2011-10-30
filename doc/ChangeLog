@@ -1,0 +1,26 @@
+2007-03-06  Titus Brown  <t@localhost.localdomain>
+
+	* Cleaned up docs a bit, changed the spec plugin code to automatically
+	  up the verbosity level.
+
+2007-02-20  Michal Kwiatkowski  <constant.beta@gmail.com>
+
+	* Added 'spec' plugin.
+
+2007-02-18  Titus Brown  <t@localhost.localdomain>
+
+	* Added 'output_save' plugin.
+
+2007-02-17  Titus Brown  <t@localhost.localdomain>
+
+	* Added figleaf version check.
+
+	* Moved 'annotate-sections.py' over to figleaf package, script
+	  'annotate-sections'
+
+	* Added exception if figleaf is not installed but FigleafSections
+	  plugin is enabled.
+
+	* annotate-sections.py is now a bit more friendly!
+
+	* Modified setup.py to contain more information!

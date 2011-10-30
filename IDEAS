@@ -1,0 +1,17 @@
+'nose' patches:
+
+ -- multihome -w
+ -- PRIORITY stuff
+ -- a way to get a 'canonical' name for a module, class, function, method.
+    (e.g. my 'fullname' stuff)
+
+Other ideas:
+
+ -- summary, which drops out lists of failed tests etc in a nice format;
+ -- runonly, to run only the tests in summary format
+ -- capture, which captures stdout for each test into a separate
+    file
+ -- history, keeps track of history & finds sporadically failing tests
+ -- path-mangler, which would just be a straight ol' python module
+    for (guess what?) mangling sys.path
+
