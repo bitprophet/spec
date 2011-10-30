@@ -7,7 +7,7 @@ setup(
     author = 'Jeff Forcier',
     author_email = 'jeff@bitprophet.org',
     license = 'MIT',
-    packages = find_packages(),
+    py_modules = ["spec"],
     entry_points = {
         'nose.plugins.0.10': [
             'spec = spec:Spec',
