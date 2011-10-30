@@ -12,6 +12,7 @@ def prepend_in_each_line(string, prefix='    '):
 
 class SpecPluginTestCase(PluginTester, unittest.TestCase):
     activate  = '--with-spec'
+    args = ['--no-spec-color']
     plugins   = [Spec()]
 
     def _get_suitepath(self):
@@ -115,7 +116,7 @@ class TestPluginSpecWithTestGeneratorsWithDescriptions(SpecPluginTestCase):
 
 class TestPluginSpecWithDoctests(SpecPluginTestCase):
     activate  = '--with-spec'
-    args      = ['--with-doctest', '--doctest-tests', '--spec-doctests']
+    args      = ['--with-doctest', '--doctest-tests', '--spec-doctests', '--no-spec-color']
     plugins   = [Spec(), nose.plugins.doctests.Doctest()]
 
     suitename = 'doctests'
@@ -129,7 +130,7 @@ class TestPluginSpecWithDoctests(SpecPluginTestCase):
 
 class TestPluginSpecWithDoctestsButDisabled(SpecPluginTestCase):
     activate  = '--with-spec'
-    args      = ['--with-doctest', '--doctest-tests'] # no --spec-doctests option
+    args      = ['--with-doctest', '--doctest-tests', '--no-spec-color'] # no --spec-doctests option
     plugins   = [Spec(), nose.plugins.doctests.Doctest()]
     suitename = 'doctests'
 

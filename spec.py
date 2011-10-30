@@ -242,11 +242,11 @@ class Spec(Plugin):
 
     def options(self, parser, env=os.environ):
         Plugin.options(self, parser, env)
-        parser.add_option('--spec-color', action='store_true',
-                          dest='spec_color',
-                          default=env.get('NOSE_SPEC_COLOR'),
-                          help="Show coloured (red/green) output for specifications "
-                          "[NOSE_SPEC_COLOR]")
+        parser.add_option('--no-spec-color', action='store_true',
+                          dest='no_spec_color',
+                          default=env.get('NOSE_NO_SPEC_COLOR'),
+                          help="Don't show colors with --with-spec"
+                          "[NOSE_NO_SPEC_COLOR]")
         parser.add_option('--spec-doctests', action='store_true',
                           dest='spec_doctests',
                           default=env.get('NOSE_SPEC_DOCTESTS'),
@@ -259,7 +259,7 @@ class Spec(Plugin):
         if options.enable_plugin_spec:
             options.verbosity = max(options.verbosity, 2)
 
-        if options.spec_color:
+        if not options.no_spec_color:
             self._colorize = lambda color: lambda text: in_color(color, text)
         else:
             self._colorize = lambda color: lambda text: text
