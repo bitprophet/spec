@@ -15,7 +15,7 @@ class SpecPluginTestCase(PluginTester, unittest.TestCase):
     plugins   = [Spec()]
 
     def _get_suitepath(self):
-        return 'tests/spec_test_cases/test_%s.py' % self.suitename
+        return 'tests/spec_test_cases/%s.py' % self.suitename
     suitepath = property(_get_suitepath)
 
     def assertContains(self, needle, haystack):
@@ -90,7 +90,7 @@ class TestPluginSpecWithDocstringSpecNames(SpecPluginTestCase):
         self.assertContainsInOutput(self.expected_test_docstring_spec_class_names_output)
 
 class TestPluginSpecWithTestGenerators(SpecPluginTestCase):
-    suitename = 'test_generators'
+    suitename = 'generators'
     expected_test_test_generators_output = """Product of even numbers is even
 - holds for 18, 8
 - holds for 14, 12
@@ -102,7 +102,7 @@ class TestPluginSpecWithTestGenerators(SpecPluginTestCase):
         self.assertContainsInOutput(self.expected_test_test_generators_output)
 
 class TestPluginSpecWithTestGeneratorsWithDescriptions(SpecPluginTestCase):
-    suitename = 'test_generators_with_descriptions'
+    suitename = 'generators_with_descriptions'
     expected_test_test_generators_with_descriptions_output = """Natural numbers truths
 - for even numbers 18 and 8 their product is even as well
 - for even numbers 14 and 12 their product is even as well
@@ -119,7 +119,7 @@ class TestPluginSpecWithDoctests(SpecPluginTestCase):
     plugins   = [Spec(), nose.plugins.doctests.Doctest()]
 
     suitename = 'doctests'
-    expected_test_doctests_output = """test_doctests
+    expected_test_doctests_output = """doctests
 - 2 + 3 returns 5
 - None is nothing
 - foobar throws "NameError: name 'foobar' is not defined"
