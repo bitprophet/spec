@@ -8,7 +8,7 @@ setup(
     author_email = 'jeff@bitprophet.org',
     url = 'https://github.com/bitprophet/spec',
     license = 'MIT',
-    py_modules = ["spec"],
+    packages = find_packages(),
     entry_points = {
         'nose.plugins.0.10': [
             'spec = spec:Spec',
