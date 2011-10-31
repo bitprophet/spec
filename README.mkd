@@ -88,8 +88,8 @@ only the following items will be picked up as test cases:
     * `Feature.does_something_awesome`
     * `something_tested_by_itself_outside_a_class`
 
-The imported function and class, and the underscored functions/methods, are
-ignored.
+The imported function and class, the underscored functions/methods, and the
+methods inherited from a parent class, are all ignored.
 
 
 ## How do I use it?
