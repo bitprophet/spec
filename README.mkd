@@ -130,7 +130,8 @@ This version of the plugin was created and distributed by Jeff Forcier, &copy;
 [changes](https://github.com/bitprophet/rudolf/commit/7c872e7deeff622de62a439b8e4dd807047c095e).
 It also fixes a handful of bugs such as broken
 [SkipTest](http://nose.readthedocs.org/en/latest/plugins/skip.html)
-compatibility under Nose 1.x.
+compatibility under Nose 1.x, and then adds some additional functionality on
+top (most notably the `spec` command-line tool.)
 
 
 ## What's the license?
