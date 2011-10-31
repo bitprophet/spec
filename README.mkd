@@ -88,9 +88,9 @@ def something_tested_by_itself_outside_a_class():
 
 only the following items will be picked up as test cases:
 
-    * `Feature.should_have_some_attribute`
-    * `Feature.does_something_awesome`
-    * `something_tested_by_itself_outside_a_class`
+* `Feature.should_have_some_attribute`
+* `Feature.does_something_awesome`
+* `something_tested_by_itself_outside_a_class`
 
 The imported function and class, the underscored functions/methods, and the
 methods inherited from a parent class, are all ignored.
