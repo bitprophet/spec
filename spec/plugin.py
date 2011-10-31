@@ -130,7 +130,11 @@ def noseMethodDescription(test):
 
 
 def unittestMethodDescription(test):
-    return test._testMethodDoc or underscored2spec(test._testMethodName)
+    if test._testMethodDoc is None:
+        return underscored2spec(test._testMethodName)
+    else:
+        description = test._testMethodDoc.split("\n")
+        return "".join([text.strip() for text in description])
 
 
 def noseFunctionDescription(test):
