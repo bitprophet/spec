@@ -49,6 +49,44 @@ and the member names are tweaked to read more like regular English:
     - has sides of equal length
     - is a shape
 
+### Test runner
+
+`spec` also ships with a same-name command-line tool which may be used as a
+more liberal `nosetests`. In addition to toggling a number of useful default
+options (such as `--spec-color` and `nose`'s builtin `--detailed-errors`)
+`spec`-the-program will honor any and all public objects defined within your
+project's `tests` directory, meaning any file, function or class whose name
+does not begin with an underscore (`'_'`) and which is defined locally.
+
+For example, given the following code inside `tests/feature_name.py`:
+
+    from external_module import a_function, AClass
+
+    def _helper_function(args):
+        return a_function(args)
+
+    class Feature(object):
+        def should_have_some_attribute(self):
+            _helper_function(AClass)
+
+        def does_something_awesome(self):
+            self._helper_method()
+
+        def _helper_method(self):
+            pass
+
+    def something_tested_by_itself_outside_a_class():
+        pass
+
+only the following items will be picked up as test cases:
+
+    * `Feature.should_have_some_attribute`
+    * `Feature.does_something_awesome`
+    * `something_tested_by_itself_outside_a_class`
+
+The imported function and class, and the underscored functions/methods, are
+ignored.
+
 
 ## How do I use it?
 

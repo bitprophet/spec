@@ -7,22 +7,22 @@ from nose.plugins import Plugin, PluginTester
 from spec import Spec
 
 
-def prepend_in_each_line(string, prefix='    '):
+def _prepend_in_each_line(string, prefix='    '):
     return ''.join([prefix + s for s in string.splitlines(True)])
 
-class SpecPluginTestCase(PluginTester, unittest.TestCase):
+class _SpecPluginTestCase(PluginTester, unittest.TestCase):
     activate  = '--with-spec'
     args = ['--no-spec-color']
     plugins   = [Spec()]
 
     def _get_suitepath(self):
-        return 'tests/spec_test_cases/%s.py' % self.suitename
+        return '_spec_test_cases/%s.py' % self.suitename
     suitepath = property(_get_suitepath)
 
     def assertContains(self, needle, haystack):
         assert needle in haystack,\
             "Failed to find:\n\n%s\ninside\n%s\n" % \
-                (prepend_in_each_line(needle), prepend_in_each_line(haystack))
+                (_prepend_in_each_line(needle), _prepend_in_each_line(haystack))
 
     def assertContainsInOutput(self, string):
         self.assertContains(string, str(self.output))
@@ -30,12 +30,12 @@ class SpecPluginTestCase(PluginTester, unittest.TestCase):
     def failIfContains(self, needle, haystack):
         assert needle not in haystack,\
             "Found:\n\n%s\ninside\n%s\n" % \
-                (prepend_in_each_line(needle), prepend_in_each_line(haystack))
+                (_prepend_in_each_line(needle), _prepend_in_each_line(haystack))
 
     def failIfContainsInOutput(self, string):
         self.failIfContains(string, str(self.output))
 
-class TestPluginSpecWithFoobar(SpecPluginTestCase):
+class TestPluginSpecWithFoobar(_SpecPluginTestCase):
     suitename = 'foobar'
     expected_test_foobar_output = """Foobar
 - can be automatically documented
@@ -50,7 +50,7 @@ class TestPluginSpecWithFoobar(SpecPluginTestCase):
     def test_builds_specifications_for_unittest_test_cases(self):
         self.assertContainsInOutput(self.expected_test_bazbar_output)
 
-class TestPluginSpecWithFoobaz(SpecPluginTestCase):
+class TestPluginSpecWithFoobaz(_SpecPluginTestCase):
     suitename = 'foobaz'
     expected_test_foobaz_output = """Foobaz
 - behaves such and such
@@ -67,7 +67,7 @@ class TestPluginSpecWithFoobaz(SpecPluginTestCase):
 class TestPluginSpecWithFoobazAndStandardPluginsEnabled(TestPluginSpecWithFoobaz):
     plugins = [Spec(), nose.plugins.skip.Skip(), nose.plugins.deprecated.Deprecated()]
 
-class TestPluginSpecWithContainers(SpecPluginTestCase):
+class TestPluginSpecWithContainers(_SpecPluginTestCase):
     suitename = 'containers'
     expected_test_containers_output = """Containers
 - are marked as deprecated
@@ -76,7 +76,7 @@ class TestPluginSpecWithContainers(SpecPluginTestCase):
     def test_builds_specifications_for_test_modules(self):
         self.assertContainsInOutput(self.expected_test_containers_output)
 
-class TestPluginSpecWithDocstringSpecNames(SpecPluginTestCase):
+class TestPluginSpecWithDocstringSpecNames(_SpecPluginTestCase):
     suitename = 'docstring_spec_names'
     expected_test_docstring_spec_modules_names_output = """This module
 - uses function to do this and that
@@ -90,7 +90,7 @@ class TestPluginSpecWithDocstringSpecNames(SpecPluginTestCase):
         self.assertContainsInOutput(self.expected_test_docstring_spec_modules_names_output)
         self.assertContainsInOutput(self.expected_test_docstring_spec_class_names_output)
 
-class TestPluginSpecWithTestGenerators(SpecPluginTestCase):
+class TestPluginSpecWithTestGenerators(_SpecPluginTestCase):
     suitename = 'generators'
     expected_test_test_generators_output = """Product of even numbers is even
 - holds for 18, 8
@@ -102,7 +102,7 @@ class TestPluginSpecWithTestGenerators(SpecPluginTestCase):
     def test_builds_specifications_for_test_generators(self):
         self.assertContainsInOutput(self.expected_test_test_generators_output)
 
-class TestPluginSpecWithTestGeneratorsWithDescriptions(SpecPluginTestCase):
+class TestPluginSpecWithTestGeneratorsWithDescriptions(_SpecPluginTestCase):
     suitename = 'generators_with_descriptions'
     expected_test_test_generators_with_descriptions_output = """Natural numbers truths
 - for even numbers 18 and 8 their product is even as well
@@ -114,7 +114,7 @@ class TestPluginSpecWithTestGeneratorsWithDescriptions(SpecPluginTestCase):
     def test_builds_specifications_for_test_generators_using_description_attribute_if_present(self):
         self.assertContainsInOutput(self.expected_test_test_generators_with_descriptions_output)
 
-class TestPluginSpecWithDoctests(SpecPluginTestCase):
+class TestPluginSpecWithDoctests(_SpecPluginTestCase):
     activate  = '--with-spec'
     args      = ['--with-doctest', '--doctest-tests', '--spec-doctests', '--no-spec-color']
     plugins   = [Spec(), nose.plugins.doctests.Doctest()]
@@ -128,7 +128,7 @@ class TestPluginSpecWithDoctests(SpecPluginTestCase):
     def test_builds_specifications_for_doctests(self):
         self.assertContainsInOutput(self.expected_test_doctests_output)
 
-class TestPluginSpecWithDoctestsButDisabled(SpecPluginTestCase):
+class TestPluginSpecWithDoctestsButDisabled(_SpecPluginTestCase):
     activate  = '--with-spec'
     args      = ['--with-doctest', '--doctest-tests', '--no-spec-color'] # no --spec-doctests option
     plugins   = [Spec(), nose.plugins.doctests.Doctest()]
