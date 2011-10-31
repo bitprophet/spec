@@ -318,5 +318,17 @@ class Spec(Plugin):
         self.stream.print_spec(self._colorize(color), test, status)
 
 
+def main():
+    import sys
+    args = [
+        # Don't capture stdout
+        '--nocapture',
+        # Use the spec plugin
+        '--with-spec',
+        # Enable useful asserts
+        '--detailed-errors',
+    ]
+    nose.core.run(argv=['nosetests'] + args + sys.argv[1:])
+
 if __name__ == '__main__':
-    doctest.testmod()
+    main()

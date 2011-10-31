@@ -12,7 +12,10 @@ setup(
     entry_points = {
         'nose.plugins.0.10': [
             'spec = spec:Spec',
-        ]
+        ],
+        'console_scripts': [
+            'spec = spec:main'
+        ],
     },
     classifiers = [
         'Development Status :: 4 - Beta',
