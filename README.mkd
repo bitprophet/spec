@@ -65,7 +65,11 @@ For example, given the following code inside `tests/feature_name.py`:
     def _helper_function(args):
         return a_function(args)
 
-    class Feature(object):
+    class _Parent(object):
+        def this_will_not_get_tested():
+            pass
+
+    class Feature(_Parent):
         def should_have_some_attribute(self):
             _helper_function(AClass)
 
