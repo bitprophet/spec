@@ -3,13 +3,13 @@ from setuptools import setup, find_packages
 setup(
     name='spec',
     version="0.9.1",
-    description = 'Specification-style output for nose',
-    author = 'Jeff Forcier',
-    author_email = 'jeff@bitprophet.org',
-    url = 'https://github.com/bitprophet/spec',
-    license = 'MIT',
-    packages = find_packages(),
-    entry_points = {
+    description='Specification-style output for nose',
+    author='Jeff Forcier',
+    author_email='jeff@bitprophet.org',
+    url='https://github.com/bitprophet/spec',
+    license='MIT',
+    packages=find_packages(),
+    entry_points={
         'nose.plugins.0.10': [
             'spec = spec:Spec',
         ],
@@ -17,7 +17,7 @@ setup(
             'spec = spec:main'
         ],
     },
-    classifiers = [
+    classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Plugins',
         'Intended Audience :: Developers',

@@ -3,17 +3,18 @@
 
 import unittest
 import nose
-from nose.plugins import Plugin, PluginTester
+from nose.plugins import PluginTester
 from spec import Spec
 
 
 def _prepend_in_each_line(string, prefix='    '):
     return ''.join([prefix + s for s in string.splitlines(True)])
 
+
 class _SpecPluginTestCase(PluginTester, unittest.TestCase):
-    activate  = '--with-spec'
+    activate = '--with-spec'
     args = ['--no-spec-color']
-    plugins   = [Spec()]
+    plugins = [Spec()]
 
     def _get_suitepath(self):
         return '_spec_test_cases/%s.py' % self.suitename
@@ -35,6 +36,7 @@ class _SpecPluginTestCase(PluginTester, unittest.TestCase):
     def failIfContainsInOutput(self, string):
         self.failIfContains(string, str(self.output))
 
+
 class TestPluginSpecWithFoobar(_SpecPluginTestCase):
     suitename = 'foobar'
     expected_test_foobar_output = """Foobar
@@ -44,11 +46,13 @@ class TestPluginSpecWithFoobar(_SpecPluginTestCase):
     expected_test_bazbar_output = """Baz bar
 - does this and that
 """
+
     def test_builds_specifications_for_test_classes(self):
         self.assertContainsInOutput(self.expected_test_foobar_output)
 
     def test_builds_specifications_for_unittest_test_cases(self):
         self.assertContainsInOutput(self.expected_test_bazbar_output)
+
 
 class TestPluginSpecWithFoobaz(_SpecPluginTestCase):
     suitename = 'foobaz'
@@ -59,13 +63,16 @@ class TestPluginSpecWithFoobaz(_SpecPluginTestCase):
 - throws deprecated exception (DEPRECATED)
 - throws skip test exception (SKIPPED)
 """
+
     def test_marks_failed_specifications_properly(self):
         self.assertContainsInOutput(self.expected_test_foobaz_output)
+
 
 # Make sure DEPRECATED and SKIPPED are still present in the output when set
 # of standard nose plugins is enabled.
 class TestPluginSpecWithFoobazAndStandardPluginsEnabled(TestPluginSpecWithFoobaz):
     plugins = [Spec(), nose.plugins.skip.Skip(), nose.plugins.deprecated.Deprecated()]
+
 
 class TestPluginSpecWithContainers(_SpecPluginTestCase):
     suitename = 'containers'
@@ -73,8 +80,10 @@ class TestPluginSpecWithContainers(_SpecPluginTestCase):
 - are marked as deprecated
 - doesn't work with sets
 """
+
     def test_builds_specifications_for_test_modules(self):
         self.assertContainsInOutput(self.expected_test_containers_output)
+
 
 class TestPluginSpecWithDocstringSpecNames(_SpecPluginTestCase):
     suitename = 'docstring_spec_names'
@@ -90,6 +99,7 @@ class TestPluginSpecWithDocstringSpecNames(_SpecPluginTestCase):
         self.assertContainsInOutput(self.expected_test_docstring_spec_modules_names_output)
         self.assertContainsInOutput(self.expected_test_docstring_spec_class_names_output)
 
+
 class TestPluginSpecWithTestGenerators(_SpecPluginTestCase):
     suitename = 'generators'
     expected_test_test_generators_output = """Product of even numbers is even
@@ -99,8 +109,10 @@ class TestPluginSpecWithTestGenerators(_SpecPluginTestCase):
 - holds for 6, 2
 - holds for 16, 10
 """
+
     def test_builds_specifications_for_test_generators(self):
         self.assertContainsInOutput(self.expected_test_test_generators_output)
+
 
 class TestPluginSpecWithTestGeneratorsWithDescriptions(_SpecPluginTestCase):
     suitename = 'generators_with_descriptions'
@@ -111,13 +123,15 @@ class TestPluginSpecWithTestGeneratorsWithDescriptions(_SpecPluginTestCase):
 - for even numbers 6 and 2 their product is even as well
 - for even numbers 16 and 10 their product is even as well
 """
+
     def test_builds_specifications_for_test_generators_using_description_attribute_if_present(self):
         self.assertContainsInOutput(self.expected_test_test_generators_with_descriptions_output)
 
+
 class TestPluginSpecWithDoctests(_SpecPluginTestCase):
-    activate  = '--with-spec'
-    args      = ['--with-doctest', '--doctest-tests', '--spec-doctests', '--no-spec-color']
-    plugins   = [Spec(), nose.plugins.doctests.Doctest()]
+    activate = '--with-spec'
+    args = ['--with-doctest', '--doctest-tests', '--spec-doctests', '--no-spec-color']
+    plugins = [Spec(), nose.plugins.doctests.Doctest()]
 
     suitename = 'doctests'
     expected_test_doctests_output = """doctests
@@ -125,13 +139,17 @@ class TestPluginSpecWithDoctests(_SpecPluginTestCase):
 - None is nothing
 - foobar throws "NameError: name 'foobar' is not defined"
 """
+
     def test_builds_specifications_for_doctests(self):
         self.assertContainsInOutput(self.expected_test_doctests_output)
 
+
 class TestPluginSpecWithDoctestsButDisabled(_SpecPluginTestCase):
-    activate  = '--with-spec'
-    args      = ['--with-doctest', '--doctest-tests', '--no-spec-color'] # no --spec-doctests option
-    plugins   = [Spec(), nose.plugins.doctests.Doctest()]
+    activate = '--with-spec'
+
+    # no --spec-doctests option
+    args = ['--with-doctest', '--doctest-tests', '--no-spec-color']
+    plugins = [Spec(), nose.plugins.doctests.Doctest()]
     suitename = 'doctests'
 
     def test_doesnt_build_specifications_for_doctests_when_spec_doctests_option_wasnt_set(self):

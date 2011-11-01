@@ -1,5 +1,6 @@
 import nose
 
+
 class TestFoobaz(object):
     def test_behaves_such_and_such(self):
         assert True

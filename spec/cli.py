@@ -1,16 +1,16 @@
 import inspect
-import os
 import sys
 
 import nose
-
 
 #
 # Custom selection logic
 #
 
+
 def private(obj):
     return obj.__name__.startswith('_')
+
 
 class SpecSelector(nose.selector.Selector):
     def wantDirectory(self, dirname):
