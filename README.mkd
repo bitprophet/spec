@@ -2,7 +2,34 @@
 
 ## What is it?
 
-`spec` is a [BDD](http://behavior-driven.org)-esque
+`spec` is a Python testing tool that turns this:
+
+<pre style="background-color: #000; color: #FFF;">
+TestMyClass.test_has_an_attribute ... ok
+TestMyClass.test_should_perform_some_action ... FAIL
+TestMyClass.test_can_stand_on_its_head ... SKIP
+</pre>
+
+into this:
+
+<pre style="background-color: #000; color: #FFF;">
+MyClass
+- <span style="color: green">has an attribute</span>
+- <span style="color: purple">should perform some action</span>
+- <span style="color: yellow">can stand on its head</span>
+</pre>
+
+Specifically, `spec` provides:
+
+* Colorized, specification style output
+* Colorized tracebacks and summary
+* Optional CLI tool which enables useful non-default options and implements
+  relaxed test discovery for less `test_annoying.py:TestBoilerplate.test_code`
+  and more `readable.py:Classes.and_methods`.
+
+## Can you be more specific?
+
+Sure! `spec` is a [BDD](http://behavior-driven.org)-esque
 [nose](http://nose.readthedocs.org) plugin designed to provide "specification"
 style test output (similar to Java's
 [TestDox](http://agiledox.sourceforge.net/) or Ruby's
@@ -55,10 +82,10 @@ and the member names are tweaked to read more like regular English:
 
 `spec` also ships with a same-name command-line tool which may be used as a
 more liberal `nosetests`. In addition to toggling a number of useful default
-options (such as `--spec-color` and `nose`'s builtin `--detailed-errors`)
-`spec`-the-program will honor any and all public objects defined within your
-project's `tests` directory, meaning any file, function or class whose name
-does not begin with an underscore (`'_'`) and which is defined locally.
+options (such as `nose`'s builtin `--detailed-errors`) `spec`-the-program will
+honor any and all public objects defined within your project's `tests`
+directory, meaning any file, function or class whose name does not begin with
+an underscore (`'_'`) and which is defined locally.
 
 For example, given the following code inside `tests/feature_name.py`:
 
