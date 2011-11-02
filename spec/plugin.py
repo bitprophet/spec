@@ -3,6 +3,7 @@ import os
 import re
 import types
 import sys
+import time
 import traceback
 import unittest
 from StringIO import StringIO
@@ -312,6 +313,7 @@ class Spec(Plugin):
 
     def begin(self):
         self.current_context = None
+        self.start_time = time.time()
 
     def setOutputStream(self, stream):
         self.stream = SpecOutputStream(stream, open(os.devnull, 'w'))
@@ -403,6 +405,42 @@ class Spec(Plugin):
         print >>self.stream, ""
         self.print_tracebacks("ERROR", self._errors)
         self.print_tracebacks("FAIL", self._failures)
+        self.print_summary(result)
+
+    def print_summary(self, result):
+        # Setup
+        elapsed = time.time() - self.start_time
+        errors = len(result.errors)
+        failures = len(result.failures)
+        num_tests = result.testsRun
+        success = result.wasSuccessful()
+        # How many in how long
+        print >>self.stream, "Ran %s test%s in %s" % (
+            self._colorize("green" if success else "red", True)(num_tests),
+            "s" if num_tests > 1 else "",
+            self.format_seconds(elapsed)
+        )
+        # Did we fail, and if so, how badly?
+        if success:
+            print >>self.stream, self._colorize("green")("OK")
+        else:
+            print >>self.stream, "%s (failures=%s, errors=%s)" % (
+                self._colorize("purple")("FAILED"),
+                self._colorize("purple")(failures),
+                self._colorize("red")(errors)
+            )
+        print >>self.stream, ""
+
+    def format_seconds(self, n_seconds):
+        """Format a time in seconds."""
+        if n_seconds >= 60:
+            n_minutes, n_seconds = divmod(n_seconds, 60)
+            return "%s minutes %s seconds" % (
+                        self._colorize("green")("%d" % n_minutes),
+                        self._colorize("green")("%.3f" % n_seconds))
+        else:
+            return "%s seconds" % (
+                        self._colorize("green")("%.3f" % n_seconds))
 
     def _print_context(self, context):
         if isinstance(context, doctest.DocTestCase) and not self.spec_doctests:
