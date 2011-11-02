@@ -265,8 +265,8 @@ colors = dict(
     blue="34"
 )
 
-def in_color(color, text):
-    return "\x1b[1;%sm%s%s" % (colors[color], text, color_end)
+def in_color(color, text, bold=False):
+    return "\x1b[%s;%sm%s%s" % (1 if bold else 0, colors[color], text, color_end)
 
 ################################################################################
 ## Plugin itself.
@@ -302,9 +302,11 @@ class Spec(Plugin):
             options.verbosity = max(options.verbosity, 2)
 
         if not options.no_spec_color:
-            self._colorize = lambda color: lambda text: in_color(color, text)
+            self._colorize = lambda color, bold=False: lambda text: in_color(
+                color, text, bold
+            )
         else:
-            self._colorize = lambda color: lambda text: text
+            self._colorize = lambda color, bold=False: lambda text: text
 
         self.spec_doctests = options.spec_doctests
 
@@ -357,7 +359,7 @@ class Spec(Plugin):
             self.stream.writeln("=" * 70)
             self.stream.writeln("%s: %s" % (
                 self._colorize(problem_color)(label),
-                self._colorize("cyan")(test.shortDescription() or str(test)),
+                self._colorize("cyan", True)(test.shortDescription() or str(test)),
             ))
             self.stream.writeln("-" * 70)
             # format_exception() is...very odd re: how it breaks into lines.
@@ -380,7 +382,10 @@ class Spec(Plugin):
                     if test:
                         # this is missing for the first traceback in doctest
                         # failure report
-                        tb_lines.extend([", in ", self._colorize("cyan")(test)])
+                        tb_lines.extend([
+                            ", in ",
+                            self._colorize("cyan", True)(test)
+                        ])
                     tb_lines.extend(["\n"])
                     self.stream.write(indentation)
                     self.stream.writelines(tb_lines)
