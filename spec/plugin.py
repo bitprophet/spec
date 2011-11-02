@@ -2,6 +2,8 @@ import doctest
 import os
 import re
 import types
+import sys
+import traceback
 import unittest
 from StringIO import StringIO
 
@@ -254,12 +256,17 @@ class SpecOutputStream(OutputStream):
 ################################################################################
 
 color_end = "\x1b[1;0m"
-colors = dict(green="\x1b[1;32m", red="\x1b[1;31m", yellow="\x1b[1;33m")
-
+colors = dict(
+    green="32",
+    red="31",
+    yellow="33",
+    purple="35",
+    cyan="36",
+    blue="34"
+)
 
 def in_color(color, text):
-    return "%s%s%s" % (colors[color], text, color_end)
-
+    return "\x1b[1;%sm%s%s" % (colors[color], text, color_end)
 
 ################################################################################
 ## Plugin itself.
@@ -269,6 +276,11 @@ class Spec(Plugin):
     """Generate specification from test class/method names.
     """
     score = 1100  # must be higher than Deprecated and Skip plugins scores
+
+    def __init__(self, *args, **kwargs):
+        super(Spec, self).__init__(*args, **kwargs)
+        self._failures = []
+        self._errors = []
 
     def options(self, parser, env=os.environ):
         Plugin.options(self, parser, env)
@@ -316,6 +328,7 @@ class Spec(Plugin):
 
     def addFailure(self, test, err):
         self._print_spec('red', test, 'FAILED')
+        self._failures.append((test, err))
 
     def addError(self, test, err):
         def blurt(color, label):
@@ -327,15 +340,64 @@ class Spec(Plugin):
         elif issubclass(klass, SkipTest):
             blurt('yellow', 'SKIPPED')
         else:
+            self._errors.append((test, err))
             blurt('red', 'ERROR')
 
     def afterTest(self, test):
         self.stream.capture()
 
+    def print_tracebacks(self, label, items):
+        problem_color = {
+            "ERROR": "red",
+            "FAIL": "purple"
+        }[label]
+        for item in items:
+            test, trace = item
+            #self.stream.writeln(repr(item))
+            self.stream.writeln("=" * 70)
+            self.stream.writeln("%s: %s" % (
+                self._colorize(problem_color)(label),
+                self._colorize("cyan")(test.shortDescription() or str(test)),
+            ))
+            self.stream.writeln("-" * 70)
+            # format_exception() is...very odd re: how it breaks into lines.
+            trace = "".join(traceback.format_exception(*trace)).split("\n")
+            self.print_colorized_traceback(trace)
+
+    def print_colorized_traceback(self, formatted_traceback, indent_level=0):
+        indentation = "    " * indent_level
+        for line in formatted_traceback:
+            if line.startswith("  File"):
+                m = re.match(r'  File "(.*)", line (\d*)(?:, in (.*))?$', line)
+                if m:
+                    filename, lineno, test = m.groups()
+                    tb_lines = [
+                        '  File "',
+                        self._colorize("blue")(filename),
+                        '", line ',
+                        self._colorize("red")(lineno),
+                        ]
+                    if test:
+                        # this is missing for the first traceback in doctest
+                        # failure report
+                        tb_lines.extend([", in ", self._colorize("cyan")(test)])
+                    tb_lines.extend(["\n"])
+                    self.stream.write(indentation)
+                    self.stream.writelines(tb_lines)
+                else:
+                    print >>self.stream, indentation + line
+            elif line.startswith("    "):
+                print >>self.stream, self._colorize("cyan")(indentation + line)
+            elif line.startswith("Traceback (most recent call last)"):
+                print >>self.stream, indentation + line
+            else:
+                print >>self.stream, self._colorize("red")(indentation + line)
+
     def finalize(self, result):
         self.stream.on()
-        # Print test run summary.
-        self.stream.writeln(self.stream.get_captured())
+        print >>self.stream, ""
+        self.print_tracebacks("ERROR", self._errors)
+        self.print_tracebacks("FAIL", self._failures)
 
     def _print_context(self, context):
         if isinstance(context, doctest.DocTestCase) and not self.spec_doctests:
