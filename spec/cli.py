@@ -82,17 +82,31 @@ class CustomSelector(nose.plugins.Plugin):
 
 # Nose invocation
 def main():
-    args = [
+    defaults = [
         # Don't capture stdout
         '--nocapture',
         # Use the spec plugin
         '--with-spec',
         # Enable useful asserts
         '--detailed-errors',
-        # Only look in tests/
-        '--where=tests',
     ]
+    # Set up default test location ('tests/') and custom selector,
+    # only if user isn't giving us specific options of their own.
+    # FIXME: see if there's a way to do it post-optparse, this is brittle.
+    good = True
+    args = sys.argv[1:]
+    for opt in "-w --where --tests --match -m -i --include -e --exclude".split():
+        for arg in sys.argv[1:]:
+            if arg.startswith(opt):
+                good = False
+                break
+        if not good:
+            break
+    plugins = []
+    if good:
+        plugins = [CustomSelector()]
+        defaults.append("--where=tests")
     nose.core.run(
-        argv=['nosetests'] + args + sys.argv[1:],
-        addplugins=[CustomSelector()],
+        argv=['nosetests'] + defaults + args,
+        addplugins=plugins,
     )
