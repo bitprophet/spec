@@ -421,10 +421,11 @@ class Spec(Plugin):
         if success:
             print >>self.stream, self._colorize("green")("OK")
         else:
-            print >>self.stream, "%s (failures=%s, errors=%s)" % (
+            print >>self.stream, "%s (failures=%s, errors=%s, skips=%s)" % (
                 self._colorize("purple")("FAILED"),
                 self._colorize("purple")(len(result.failures)),
-                self._colorize("red")(len(result.errors))
+                self._colorize("red")(len(result.errors)),
+                self._colorize("yellow")(len(result.skipped))
             )
         print >>self.stream, ""
 
