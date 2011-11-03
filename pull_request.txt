@@ -1,9 +1,0 @@
-In implementing #1 I followed the existing color stuff in `spec`/`pinocchio`.
-However it's pretty silly looking (partly because I wasn't using it exactly as
-intended) and could be cleaned up.
-
-Thinking something like generating e.g. `self.red(txt, bold=True)`, but also
-possibly adding colorscheme aliases like in Rudolf (e.g. `self.error(txt)` or
-`self.filename(txt)`). Even if we don't implement Rudolf's color schemes, being
-able to change many disparate instances of the same color to a different color
-or bold level, will be useful as we tweak.
