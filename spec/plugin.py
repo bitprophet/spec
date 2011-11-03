@@ -409,16 +409,13 @@ class Spec(Plugin):
 
     def print_summary(self, result):
         # Setup
-        elapsed = time.time() - self.start_time
-        errors = len(result.errors)
-        failures = len(result.failures)
         num_tests = result.testsRun
         success = result.wasSuccessful()
         # How many in how long
         print >>self.stream, "Ran %s test%s in %s" % (
             self._colorize("green" if success else "red", True)(num_tests),
             "s" if num_tests > 1 else "",
-            self.format_seconds(elapsed)
+            self.format_seconds(time.time() - self.start_time)
         )
         # Did we fail, and if so, how badly?
         if success:
@@ -426,8 +423,8 @@ class Spec(Plugin):
         else:
             print >>self.stream, "%s (failures=%s, errors=%s)" % (
                 self._colorize("purple")("FAILED"),
-                self._colorize("purple")(failures),
-                self._colorize("red")(errors)
+                self._colorize("purple")(len(result.failures)),
+                self._colorize("red")(len(result.errors))
             )
         print >>self.stream, ""
 
