@@ -310,7 +310,7 @@ class Spec(Plugin):
             'deprecated': 'yellow',
             'skipped': 'yellow',
             'failure': 'purple',
-            'name': 'cyan',
+            'identifier': 'cyan',
             'file': 'blue',
         }.items():
             # No color: just print() really
@@ -318,7 +318,10 @@ class Spec(Plugin):
             if not options.no_spec_color:
                 # Color: colorizes!
                 func = partial(colorize, color)
+            # Store in dict (slightly quicker/nicer than getattr)
             self.color[label] = func
+            # Add attribute for easier hardcoded access
+            setattr(self, label, func)
 
     def begin(self):
         self.current_context = None
@@ -370,7 +373,7 @@ class Spec(Plugin):
             self.stream.writeln("=" * 70)
             self.stream.writeln("%s: %s" % (
                 self.color[problem_color](label),
-                self.color['name'](desc, bold=True),
+                self.identifier(desc, bold=True),
             ))
             self.stream.writeln("-" * 70)
             # format_exception() is...very odd re: how it breaks into lines.
@@ -386,16 +389,16 @@ class Spec(Plugin):
                     filename, lineno, test = m.groups()
                     tb_lines = [
                         '  File "',
-                        self.color['file'](filename),
+                        self.file(filename),
                         '", line ',
-                        self.color['error'](lineno),
+                        self.error(lineno),
                         ]
                     if test:
                         # this is missing for the first traceback in doctest
                         # failure report
                         tb_lines.extend([
                             ", in ",
-                            self.color['name'](test, bold=True)
+                            self.identifier(test, bold=True)
                         ])
                     tb_lines.extend(["\n"])
                     self.stream.write(indentation)
@@ -403,11 +406,11 @@ class Spec(Plugin):
                 else:
                     print >>self.stream, indentation + line
             elif line.startswith("    "):
-                print >>self.stream, self.color['name'](indentation + line)
+                print >>self.stream, self.identifier(indentation + line)
             elif line.startswith("Traceback (most recent call last)"):
                 print >>self.stream, indentation + line
             else:
-                print >>self.stream, self.color['error'](indentation + line)
+                print >>self.stream, self.error(indentation + line)
 
     def finalize(self, result):
         self.stream.on()
@@ -422,13 +425,13 @@ class Spec(Plugin):
         success = result.wasSuccessful()
         # How many in how long
         print >>self.stream, "Ran %s test%s in %s" % (
-            self.color['ok' if success else 'error'](num_tests),
+            (self.ok if success else self.error)(num_tests),
             "s" if num_tests > 1 else "",
             self.format_seconds(time.time() - self.start_time)
         )
         # Did we fail, and if so, how badly?
         if success:
-            print >>self.stream, self.color['ok']("OK")
+            print >>self.stream, self.ok("OK")
         else:
             types = (
                 ('failures', 'failure'),
@@ -443,14 +446,14 @@ class Spec(Plugin):
                     text = self.color[color](text)
                 pairs.append("%s=%s" % (label, text))
             print >>self.stream, "%s (%s)" % (
-                self.color['failure']("FAILED"),
+                self.failure("FAILED"),
                 ", ".join(pairs)
             )
         print >>self.stream, ""
 
     def format_seconds(self, n_seconds):
         """Format a time in seconds."""
-        func = self.color['ok']
+        func = self.ok
         if n_seconds >= 60:
             n_minutes, n_seconds = divmod(n_seconds, 60)
             return "%s minutes %s seconds" % (
