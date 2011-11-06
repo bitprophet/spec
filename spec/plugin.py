@@ -7,6 +7,7 @@ import time
 import traceback
 import unittest
 from StringIO import StringIO
+from functools import partial
 
 # Python 2.7: _WritelnDecorator moved.
 try:
@@ -238,19 +239,16 @@ class SpecOutputStream(OutputStream):
     def print_context(self, context):
         self.print_line("\n%s" % contextDescription(context))
 
-    def print_spec(self, colorized, test, status=None):
+    def print_spec(self, color_func, test, status=None):
         spec = testDescription(test)
-        if isinstance(spec, types.GeneratorType):
-            for s in spec:
-                self._print_spec(colorized, s, status)
-        elif spec:
-            self._print_spec(colorized, spec, status)
+        if not isinstance(spec, types.GeneratorType):
+            spec = [spec]
+        for s in spec:
+            name = "- %s" % s
+            paren = (" (%s)" % status) if status else ""
+            self.print_line(color_func(name + paren))
 
-    def _print_spec(self, colorized, spec, status=None):
-        if status:
-            self.print_line(colorized("- %s (%s)" % (spec, status)))
-        else:
-            self.print_line(colorized("- %s" % spec))
+
 
 ################################################################################
 ## Color helpers.
@@ -266,8 +264,9 @@ colors = dict(
     blue="34"
 )
 
-def in_color(color, text, bold=False):
-    return "\x1b[%s;%sm%s%s" % (1 if bold else 0, colors[color], text, color_end)
+def colorize(color, text, bold=False):
+    bold = 1 if bold else 0
+    return "\x1b[%s;%sm%s%s" % (bold, colors[color], text, color_end)
 
 ################################################################################
 ## Plugin itself.
@@ -282,6 +281,7 @@ class Spec(Plugin):
         super(Spec, self).__init__(*args, **kwargs)
         self._failures = []
         self._errors = []
+        self.color = {}
 
     def options(self, parser, env=os.environ):
         Plugin.options(self, parser, env)
@@ -297,19 +297,28 @@ class Spec(Plugin):
                           "[NOSE_SPEC_DOCTESTS]")
 
     def configure(self, options, config):
+        # Configure
         Plugin.configure(self, options, config)
-
+        # Set options
         if options.enable_plugin_spec:
             options.verbosity = max(options.verbosity, 2)
-
-        if not options.no_spec_color:
-            self._colorize = lambda color, bold=False: lambda text: in_color(
-                color, text, bold
-            )
-        else:
-            self._colorize = lambda color, bold=False: lambda text: text
-
         self.spec_doctests = options.spec_doctests
+        # Color setup
+        for label, color in {
+            'error': 'red',
+            'ok': 'green',
+            'deprecated': 'yellow',
+            'skipped': 'yellow',
+            'failure': 'purple',
+            'name': 'cyan',
+            'file': 'blue',
+        }.items():
+            # No color: just print() really
+            func = lambda text, bold=False: text
+            if not options.no_spec_color:
+                # Color: colorizes!
+                func = partial(colorize, color)
+            self.color[label] = func
 
     def begin(self):
         self.current_context = None
@@ -328,10 +337,10 @@ class Spec(Plugin):
         self.stream.off()
 
     def addSuccess(self, test):
-        self._print_spec('green', test)
+        self._print_spec('ok', test)
 
     def addFailure(self, test, err):
-        self._print_spec('red', test, 'FAILED')
+        self._print_spec('failure', test, 'FAILED')
         self._failures.append((test, err))
 
     def addError(self, test, err):
@@ -340,28 +349,28 @@ class Spec(Plugin):
 
         klass = err[0]
         if issubclass(klass, nose.DeprecatedTest):
-            blurt('yellow', 'DEPRECATED')
+            blurt('deprecated', 'DEPRECATED')
         elif issubclass(klass, SkipTest):
-            blurt('yellow', 'SKIPPED')
+            blurt('skipped', 'SKIPPED')
         else:
             self._errors.append((test, err))
-            blurt('red', 'ERROR')
+            blurt('error', 'ERROR')
 
     def afterTest(self, test):
         self.stream.capture()
 
     def print_tracebacks(self, label, items):
         problem_color = {
-            "ERROR": "red",
-            "FAIL": "purple"
+            "ERROR": "error",
+            "FAIL": "failure"
         }[label]
         for item in items:
             test, trace = item
-            #self.stream.writeln(repr(item))
+            desc = test.shortDescription() or str(test)
             self.stream.writeln("=" * 70)
             self.stream.writeln("%s: %s" % (
-                self._colorize(problem_color)(label),
-                self._colorize("cyan", True)(test.shortDescription() or str(test)),
+                self.color[problem_color](label),
+                self.color['name'](desc, bold=True),
             ))
             self.stream.writeln("-" * 70)
             # format_exception() is...very odd re: how it breaks into lines.
@@ -377,16 +386,16 @@ class Spec(Plugin):
                     filename, lineno, test = m.groups()
                     tb_lines = [
                         '  File "',
-                        self._colorize("blue")(filename),
+                        self.color['file'](filename),
                         '", line ',
-                        self._colorize("red")(lineno),
+                        self.color['error'](lineno),
                         ]
                     if test:
                         # this is missing for the first traceback in doctest
                         # failure report
                         tb_lines.extend([
                             ", in ",
-                            self._colorize("cyan", True)(test)
+                            self.color['name'](test, bold=True)
                         ])
                     tb_lines.extend(["\n"])
                     self.stream.write(indentation)
@@ -394,11 +403,11 @@ class Spec(Plugin):
                 else:
                     print >>self.stream, indentation + line
             elif line.startswith("    "):
-                print >>self.stream, self._colorize("cyan")(indentation + line)
+                print >>self.stream, self.color['name'](indentation + line)
             elif line.startswith("Traceback (most recent call last)"):
                 print >>self.stream, indentation + line
             else:
-                print >>self.stream, self._colorize("red")(indentation + line)
+                print >>self.stream, self.color['error'](indentation + line)
 
     def finalize(self, result):
         self.stream.on()
@@ -413,42 +422,43 @@ class Spec(Plugin):
         success = result.wasSuccessful()
         # How many in how long
         print >>self.stream, "Ran %s test%s in %s" % (
-            self._colorize("green" if success else "red", True)(num_tests),
+            self.color['ok' if success else 'error'](num_tests),
             "s" if num_tests > 1 else "",
             self.format_seconds(time.time() - self.start_time)
         )
         # Did we fail, and if so, how badly?
         if success:
-            print >>self.stream, self._colorize("green")("OK")
+            print >>self.stream, self.color['ok']("OK")
         else:
-            summary = (
-                ('failures', 'purple'),
-                ('errors', 'red'),
-                ('skipped', 'yellow'),
+            types = (
+                ('failures', 'failure'),
+                ('errors', 'error'),
+                ('skipped', 'skipped'),
             )
             pairs = []
-            for label, color in summary:
+            for label, color in types:
                 num = len(getattr(result, label))
                 text = str(num)
                 if num:
-                    text = self._colorize(color)(text)
+                    text = self.color[color](text)
                 pairs.append("%s=%s" % (label, text))
             print >>self.stream, "%s (%s)" % (
-                self._colorize("purple")("FAILED"),
+                self.color['failure']("FAILED"),
                 ", ".join(pairs)
             )
         print >>self.stream, ""
 
     def format_seconds(self, n_seconds):
         """Format a time in seconds."""
+        func = self.color['ok']
         if n_seconds >= 60:
             n_minutes, n_seconds = divmod(n_seconds, 60)
             return "%s minutes %s seconds" % (
-                        self._colorize("green")("%d" % n_minutes),
-                        self._colorize("green")("%.3f" % n_seconds))
+                        func("%d" % n_minutes),
+                        func("%.3f" % n_seconds))
         else:
             return "%s seconds" % (
-                        self._colorize("green")("%.3f" % n_seconds))
+                        func("%.3f" % n_seconds))
 
     def _print_context(self, context):
         if isinstance(context, doctest.DocTestCase) and not self.spec_doctests:
@@ -458,4 +468,4 @@ class Spec(Plugin):
     def _print_spec(self, color, test, status=None):
         if isinstance(test.test, doctest.DocTestCase) and not self.spec_doctests:
             return
-        self.stream.print_spec(self._colorize(color), test, status)
+        self.stream.print_spec(self.color[color], test, status)
