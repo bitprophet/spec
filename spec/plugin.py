@@ -421,11 +421,21 @@ class Spec(Plugin):
         if success:
             print >>self.stream, self._colorize("green")("OK")
         else:
-            print >>self.stream, "%s (failures=%s, errors=%s, skips=%s)" % (
+            summary = (
+                ('failures', 'purple'),
+                ('errors', 'red'),
+                ('skipped', 'yellow'),
+            )
+            pairs = []
+            for label, color in summary:
+                num = len(getattr(result, label))
+                text = str(num)
+                if num:
+                    text = self._colorize(color)(text)
+                pairs.append("%s=%s" % (label, text))
+            print >>self.stream, "%s (%s)" % (
                 self._colorize("purple")("FAILED"),
-                self._colorize("purple")(len(result.failures)),
-                self._colorize("red")(len(result.errors)),
-                self._colorize("yellow")(len(result.skipped))
+                ", ".join(pairs)
             )
         print >>self.stream, ""
 
