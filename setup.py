@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='spec',
-    version="0.9.2",
+    version="0.9.3",
     description='Specification-style output for nose',
     author='Jeff Forcier',
     author_email='jeff@bitprophet.org',
