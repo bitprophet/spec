@@ -32,6 +32,6 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 * Import original Pinocchio/Spec codebase.
 * Trim down to just 'spec' plugin.
 * Nose 1.x fixes.
-* Python 0.9.7 fixes.
+* Python 2.7 fixes.
 * Packaging, docs, internal tests all overhauled.
 * Set colorized output as the default behavior.
