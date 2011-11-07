@@ -10,3 +10,15 @@ def test_boom():
 def test_skip():
     from nose.plugins.skip import SkipTest
     raise SkipTest
+
+
+class Foo(object):
+    def has_no_underscore(self):
+        assert True
+
+    def has_no_Test(self):
+        assert True
+
+class Foo_(object):
+    def should_print_out_as_Foo(self):
+        pass
