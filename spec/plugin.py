@@ -113,7 +113,9 @@ def underscored2spec(name):
 
 
 def camelcase2spec(name):
-    return camel2word(remove_leading_and_trailing('Test', name))
+    return camel2word(
+        remove_trailing('_',
+            remove_leading_and_trailing('Test', name)))
 
 
 def camelcaseDescription(object):
