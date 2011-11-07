@@ -78,7 +78,18 @@ and the member names are tweaked to read more like regular English:
     - has sides of equal length
     - is a shape
 
-### Test runner
+In other words:
+
+* Class-based tests are arranged with the class name as the subject, and the
+  methods as the specifications;
+* Any module-level tests are arranged with the module name as the subject;
+* `CamelCaseNames` (typically classes) have any leading/trailing `Test`
+  stripped, as well as any trailing underscore;
+* `underscored_names` have any leading/trailing `test` (with its attached
+  underscore) stripped;
+
+
+## Test runner
 
 `spec` also ships with a same-name command-line tool which may be used as a
 more liberal `nosetests`. In addition to toggling a number of useful default
@@ -121,6 +132,49 @@ only the following items will be picked up as test cases:
 
 The imported function and class, the underscored functions/methods, and the
 methods inherited from a parent class, are all ignored.
+
+### Usage tips
+
+Following from `spec`-the-tool's discovery algorithm, and `spec`-the-plugin's
+name transformation, we suggest the following for both readable code and test
+output:
+
+* Store tests in `tests/`, with whatever file-by-file organization you like
+  best;
+* Within files, import the classes under test normally, e.g. `from mymodule
+  import MyClass`;
+* Name the test classes identically, but with a trailing underscore to avoid
+  name collisions, e.g. `class MyClass_(object): [...]`
+* Name their methods like English sentences, e.g. `def has_attribute_X(self):
+  [...]`.
+
+For example:
+
+```python
+from mypackage import MyClass, MyOtherClass
+
+class MyClass_(object):
+    def has_attribute_A(self):
+        pass
+
+class MyOtherClass_(object):
+    def also_has_attribute_A(self):
+        pass
+
+    def has_attribute_B(self):
+        pass
+```
+
+tests as:
+
+```
+MyClass
+- has attribute A
+
+MyOtherClass
+- also has attribute A
+- has attribute B
+```
 
 
 ## How do I use it?
