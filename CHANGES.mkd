@@ -1,6 +1,7 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
-## 0.9.3 (2011.11.06):
+## 0.9.3
+#### (2011.11.06)
 
 * Print skipped test count in summary. (#5)
 * Only print `<type>=<count>` error counts in summary for nonzero counts (i.e.
@@ -11,19 +12,22 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 * Filter out trailing underscores from class names when printing spec output
   (so e.g. `class MyClass_` shows up as `MyClass` and not `MyClass_`.) (#8)
 
-## 0.9.2 (2011.11.02):
+## 0.9.2
+#### (2011.11.02)
 
 * PEP8 overhaul (I never audited the original source for PEP8 compliancy :()
   courtesy of Douglas Soares de Andrade. (#3)
 * Docstrings-as-test-identifiers now `strip()`'d, also thanks to Douglas.
 * Implement Rudolf-inspired traceback and summary colorization. (#1)
 
-## 0.9.1 (2011.10.30):
+## 0.9.1
+#### (2011.10.30)
 
 * Switch from single module to a package.
 * Add 'spec' CLI runner tool.
 
-## 0.9.0 (2011.10.30):
+## 0.9.0
+#### (2011.10.30)
 
 * Import original Pinocchio/Spec codebase.
 * Trim down to just 'spec' plugin.
