@@ -27,9 +27,9 @@ Specifically, `spec` provides:
   relaxed test discovery for less `test_annoying.py:TestBoilerplate.test_code`
   and more `readable.py:Classes.and_methods`.
 
-## Can you be more specific?
+## Details
 
-Sure! `spec` is a [BDD](http://behavior-driven.org)-esque
+`spec` is a [BDD](http://behavior-driven.org)-esque
 [nose](http://nose.readthedocs.org) plugin designed to provide "specification"
 style test output (similar to Java's
 [TestDox](http://agiledox.sourceforge.net/) or Ruby's
@@ -177,10 +177,10 @@ MyOtherClass
 ```
 
 
-## How do I use it?
+## Activation / command-line use
 
-Install the plugin via `setup.py`, `pip`, or what have you. Then `nosetests`
-will expose these new additional options/flags:
+After installation via `setup.py`, `pip` or what have you, `nosetests` will
+expose these new additional options/flags:
 
 * `--with-spec`: enables the plugin and prints out your tests in specification
   format. Also automatically sets `--verbose` (i.e. the spec output is a
