@@ -83,10 +83,14 @@ In other words:
 * Class-based tests are arranged with the class name as the subject, and the
   methods as the specifications;
 * Any module-level tests are arranged with the module name as the subject;
-* `CamelCaseNames` (typically classes) have any leading/trailing `Test`
-  stripped, as well as any trailing underscore;
-* `underscored_names` have any leading/trailing `test` (with its attached
-  underscore) stripped;
+* All objects' docstrings are used as their descriptions, if found. Otherwise:
+    * `CamelCaseNames` (typically classes) have any leading/trailing `Test`
+      stripped, as well as any trailing underscore;
+    * `CamelCaseNames` also get turned into sentences if necessary, so e.g.
+    `CamelCaseNames` becomes `Camel case names`;
+    * `underscored_names` have any leading/trailing `test` (with its attached
+      underscore) stripped;
+    * `underscored_names` have underscores turned into spaces;
 
 
 ## Test runner
