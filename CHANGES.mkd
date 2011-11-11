@@ -1,5 +1,13 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
+## 0.9.4
+### (20XX.YY.ZZ)
+
+* Filter out `.pyc` files when selecting tests. Fixes #15; thanks again to
+  Janne.
+* Make sure `spec` does not blow up when no `tests/` directory exists. Fixes
+  #14. Thanks to Janne Härkönen for the patch.
+
 ## 0.9.3
 #### (2011.11.06)
 
