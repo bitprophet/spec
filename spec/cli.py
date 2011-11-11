@@ -104,7 +104,7 @@ def main():
         if not good:
             break
     plugins = []
-    if good:
+    if good and os.path.isdir('tests'):
         plugins = [CustomSelector()]
         defaults.append("--where=tests")
     nose.core.run(
