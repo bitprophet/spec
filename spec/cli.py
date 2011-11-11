@@ -1,5 +1,6 @@
 import inspect
 import sys
+import os
 
 import nose
 
@@ -21,7 +22,7 @@ class SpecSelector(nose.selector.Selector):
 
     def wantFile(self, filename):
         # Same as with directories -- anything unhidden goes.
-        return True
+        return os.path.splitext(filename)[1] != '.pyc'
 
     def wantModule(self, module):
         # You guessed it -- if it's being picked up as a module, we want it.
@@ -103,7 +104,7 @@ def main():
         if not good:
             break
     plugins = []
-    if good:
+    if good and os.path.isdir('tests'):
         plugins = [CustomSelector()]
         defaults.append("--where=tests")
     nose.core.run(
