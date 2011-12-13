@@ -22,7 +22,10 @@ class SpecSelector(nose.selector.Selector):
 
     def wantFile(self, filename):
         # Same as with directories -- anything unhidden goes.
-        return os.path.splitext(filename)[1] != '.pyc'
+        # Also skip .pyc files
+        is_pyc = os.path.splitext(filename)[1] == '.pyc'
+        is_hidden = os.path.basename(filename).startswith('_')
+        return not (is_pyc or is_hidden)
 
     def wantModule(self, module):
         # You guessed it -- if it's being picked up as a module, we want it.
