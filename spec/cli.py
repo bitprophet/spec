@@ -13,6 +13,9 @@ import nose
 def private(obj):
     return obj.__name__.startswith('_')
 
+def class_members(cls):
+    return [x for x in vars(cls).values() if nose.util.isclass(x)]
+
 
 class SpecSelector(nose.selector.Selector):
     def wantDirectory(self, dirname):
@@ -44,15 +47,33 @@ class SpecSelector(nose.selector.Selector):
         good = local and not private(function)
         return good
 
+    def registerGoodClass(self, class_):
+        """
+        Internal bookkeeping to handle nested classes
+        """
+        if not hasattr(self, '_valid_classes'):
+            self._valid_classes = []
+        # Class itself added to "good" list
+        self._valid_classes.append(class_)
+        # Recurse into any inner classes
+        for cls in class_members(class_):
+            if self.isValidClass(cls):
+                self.registerGoodClass(cls)
+
+    def isValidClass(self, class_):
+        """
+        Needs to be its own method so it can be called from both wantClass and
+        registerGoodClass.
+        """
+        valid = inspect.getmodule(class_) in self._valid_modules
+        return valid and not private(class_)
+
     def wantClass(self, class_):
         # As with modules, track the valid ones for use in method testing.
         # Valid meaning defined locally in a valid module, and not private.
-        if not hasattr(self, '_valid_classes'):
-            self._valid_classes = []
-        valid = inspect.getmodule(class_) in self._valid_modules
-        good = valid and not private(class_)
+        good = self.isValidClass(class_)
         if good:
-            self._valid_classes.append(class_)
+            self.registerGoodClass(class_)
         return good
 
     def wantMethod(self, method):
@@ -88,7 +109,16 @@ class CustomSelector(nose.plugins.Plugin):
 
     def prepareTestLoader(self, loader):
         loader.selector = SpecSelector(loader.config)
-        pass
+        self.loader = loader
+
+    def loadTestsFromTestClass(self, cls):
+        """
+        Manually examine test class for inner classes.
+        """
+        results = []
+        for subclass in class_members(cls):
+            results.extend(self.loader.loadTestsFromTestClass(subclass))
+        return results
 
 
 # Nose invocation
