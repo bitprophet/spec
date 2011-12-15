@@ -4,6 +4,7 @@ import os
 
 import nose
 
+
 #
 # Custom selection logic
 #
@@ -55,24 +56,30 @@ class SpecSelector(nose.selector.Selector):
         return good
 
     def wantMethod(self, method):
+        cls = method.im_class
         # As with functions, we want only items defined on also-valid
         # containers (classes), and only ones not conventionally private.
-        valid_class = method.im_class in self._valid_classes
+        valid_class = cls in self._valid_classes
         # And ones only defined local to the class in question, not inherited
         # from its parents. Also handle oddball 'type' cases.
-        if method.im_class is type:
+        if cls is type:
             return False
         # Handle 'contributed' methods not defined on class itself
-        if not hasattr(method.im_class, method.__name__):
+        if not hasattr(cls, method.__name__):
             return False
-        candidates = list(reversed(method.im_class.mro()))[:-1]
-        for candidate in candidates:
-            if hasattr(candidate, method.__name__):
-                return False
-        return valid_class and not private(method)
+        # Only test for mro on new-style classes. (inner old-style classes lack
+        # it.)
+        if hasattr(cls, 'mro') and callable(cls.mro):
+            candidates = list(reversed(cls.mro()))[:-1]
+            for candidate in candidates:
+                if hasattr(candidate, method.__name__):
+                    return False
+        ok = valid_class and not private(method)
+        return ok
 
 
-# Silly plugin for loading selector
+# Plugin for loading selector & implementing some custom hooks too
+# (such as appending more test cases from gathered classes)
 class CustomSelector(nose.plugins.Plugin):
     enabled = True
 
@@ -112,5 +119,5 @@ def main():
         defaults.append("--where=tests")
     nose.core.run(
         argv=['nosetests'] + defaults + args,
-        addplugins=plugins,
+        addplugins=plugins
     )
