@@ -4,6 +4,8 @@ import os
 
 import nose
 
+from spec.utils import is_public_class
+
 
 #
 # Custom selection logic
@@ -14,7 +16,11 @@ def private(obj):
     return obj.__name__.startswith('_')
 
 def class_members(cls):
-    return [x for x in vars(cls).values() if nose.util.isclass(x)]
+    result = []
+    for name, value in vars(cls).iteritems():
+        if is_public_class(name, value):
+            result.append(value)
+    return result
 
 
 class SpecSelector(nose.selector.Selector):
@@ -77,6 +83,9 @@ class SpecSelector(nose.selector.Selector):
         return good
 
     def wantMethod(self, method):
+        # Short-circuit on odd results
+        if not hasattr(method, 'im_class'):
+            return False
         cls = method.im_class
         # As with functions, we want only items defined on also-valid
         # containers (classes), and only ones not conventionally private.

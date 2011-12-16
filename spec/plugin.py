@@ -119,7 +119,12 @@ def camelcase2spec(name):
 
 
 def camelcaseDescription(object):
-    description = object.__doc__ or camelcase2spec(object.__name__)
+    # TODO: handle nested inner classes.
+    formatted = camelcase2spec(object.__name__)
+    if hasattr(object, '_parent'):
+        parent_formatted = camelcase2spec(object._parent.__name__)
+        formatted = "%s.%s" % (parent_formatted, formatted)
+    description = object.__doc__ or formatted
     return description.strip()
 
 
