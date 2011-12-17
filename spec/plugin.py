@@ -279,13 +279,13 @@ def colorize(color, text, bold=False):
 ## Plugin itself.
 ################################################################################
 
-class Spec(Plugin):
+class SpecPlugin(Plugin):
     """Generate specification from test class/method names.
     """
     score = 1100  # must be higher than Deprecated and Skip plugins scores
 
     def __init__(self, *args, **kwargs):
-        super(Spec, self).__init__(*args, **kwargs)
+        super(SpecPlugin, self).__init__(*args, **kwargs)
         self._failures = []
         self._errors = []
         self.color = {}
@@ -307,7 +307,7 @@ class Spec(Plugin):
         # Configure
         Plugin.configure(self, options, config)
         # Set options
-        if options.enable_plugin_spec:
+        if options.enable_plugin_specplugin:
             options.verbosity = max(options.verbosity, 2)
         self.spec_doctests = options.spec_doctests
         # Color setup

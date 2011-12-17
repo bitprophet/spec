@@ -11,7 +11,7 @@ setup(
     packages=find_packages(),
     entry_points={
         'nose.plugins.0.10': [
-            'spec = spec:Spec',
+            'spec = spec:SpecPlugin',
         ],
         'console_scripts': [
             'spec = spec:main'
