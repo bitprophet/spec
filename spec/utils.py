@@ -4,13 +4,16 @@ from nose.util import isclass
 def is_public_class(name, value):
     return isclass(value) and not name.startswith('_')
 
+def class_members(obj):
+    return filter(lambda x: is_public_class(*x), vars(obj).iteritems())
+
 def flag_inner_classes(obj):
     """
     Mutates any attributes on ``obj`` which are classes, with link to ``obj``.
 
     Recurses on those objects as well.
     """
-    for tup in filter(lambda x: is_public_class(*x), vars(obj).iteritems()):
+    for tup in class_members(obj):
         tup[1]._parent = obj
         flag_inner_classes(tup[1])
 

@@ -4,7 +4,7 @@ import os
 
 import nose
 
-from spec.utils import is_public_class
+from spec.utils import class_members
 
 
 #
@@ -14,13 +14,6 @@ from spec.utils import is_public_class
 
 def private(obj):
     return obj.__name__.startswith('_')
-
-def class_members(cls):
-    result = []
-    for name, value in vars(cls).iteritems():
-        if is_public_class(name, value):
-            result.append(value)
-    return result
 
 
 class SpecSelector(nose.selector.Selector):
@@ -62,7 +55,7 @@ class SpecSelector(nose.selector.Selector):
         # Class itself added to "good" list
         self._valid_classes.append(class_)
         # Recurse into any inner classes
-        for cls in class_members(class_):
+        for name, cls in class_members(class_):
             if self.isValidClass(cls):
                 self.registerGoodClass(cls)
 
@@ -125,7 +118,7 @@ class CustomSelector(nose.plugins.Plugin):
         Manually examine test class for inner classes.
         """
         results = []
-        for subclass in class_members(cls):
+        for name, subclass in class_members(cls):
             results.extend(self.loader.loadTestsFromTestClass(subclass))
         return results
 
