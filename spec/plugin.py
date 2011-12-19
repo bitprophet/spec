@@ -234,6 +234,14 @@ class OutputStream(_WritelnDecorator):
         return self.capture_stream.read()
 
 
+def depth(context):
+    level = 0
+    while hasattr(context, '_parent'):
+        level += 1
+        context = context._parent
+    return level
+
+
 class SpecOutputStream(OutputStream):
     def print_text(self, text):
         self.on()
@@ -243,8 +251,14 @@ class SpecOutputStream(OutputStream):
     def print_line(self, line=''):
         self.print_text(line + "\n")
 
+    @property
+    def _indent(self):
+        return "    " * self._depth
+
     def print_context(self, context):
-        self.print_line("\n%s" % contextDescription(context))
+        # Adjust indentation depth
+        self._depth = depth(context)
+        self.print_line("\n%s%s" % (self._indent, contextDescription(context)))
 
     def print_spec(self, color_func, test, status=None):
         spec = testDescription(test)
@@ -253,7 +267,7 @@ class SpecOutputStream(OutputStream):
         for s in spec:
             name = "- %s" % s
             paren = (" (%s)" % status) if status else ""
-            self.print_line(color_func(name + paren))
+            self.print_line(self._indent + color_func(name + paren))
 
 
 
