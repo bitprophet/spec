@@ -262,7 +262,8 @@ class SpecOutputStream(OutputStream):
         for s in spec:
             name = "- %s" % s
             paren = (" (%s)" % status) if status else ""
-            self.print_line(self._indent + color_func(name + paren))
+            indent = getattr(self, '_indent', "")
+            self.print_line(indent + color_func(name + paren))
 
 
 
