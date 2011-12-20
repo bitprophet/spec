@@ -251,9 +251,17 @@ class SpecOutputStream(OutputStream):
         return "    " * self._depth
 
     def print_context(self, context):
+        # Ensure parents get printed too (e.g. an outer class with nothing but
+        # inner classes will otherwise never get printed.)
+        if (
+            hasattr(context, '_parent')
+            and not getattr(context._parent, '_printed', False)
+        ):
+            self.print_context(context._parent)
         # Adjust indentation depth
         self._depth = depth(context)
         self.print_line("\n%s%s" % (self._indent, contextDescription(context)))
+        context._printed = True
 
     def print_spec(self, color_func, test, status=None):
         spec = testDescription(test)
