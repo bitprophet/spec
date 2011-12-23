@@ -8,6 +8,7 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 * Make sure `spec` does not blow up when no `tests/` directory exists. Fixes
   #14. Thanks to Janne Härkönen for the patch.
 * Actually skip leading-underscore files; docs did not match implementation.
+* Add support for nested inner classes as recursive contexts.
 
 ## 0.9.3
 #### (2011.11.06)
