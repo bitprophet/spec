@@ -15,6 +15,8 @@ try:
 except ImportError:
     from unittest.runner import _WritelnDecorator
 
+import nose
+
 # Python 2.7: nose uses unittest's builtin SkipTest class
 try:
     SkipTest = unittest.case.SkipTest
@@ -22,7 +24,6 @@ except AttributeError:
     SkipTest = nose.SkipTest
 
 
-import nose
 from nose.plugins import Plugin
 
 
