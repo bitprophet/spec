@@ -9,6 +9,8 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
   #14. Thanks to Janne Härkönen for the patch.
 * Actually skip leading-underscore files; docs did not match implementation.
 * Add support for nested inner classes as recursive contexts.
+* Add command-line option to disable our automatic toggle of the built-in
+  ``--detailed-errors`` flag.
 
 ## 0.9.3
 #### (2011.11.06)

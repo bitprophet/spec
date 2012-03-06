@@ -321,6 +321,9 @@ class SpecPlugin(Plugin):
                           default=env.get('NOSE_SPEC_DOCTESTS'),
                           help="Include doctests in specifications "
                           "[NOSE_SPEC_DOCTESTS]")
+        parser.add_option('--no-detailed-errors', action='store_false',
+                          dest='detailedErrors',
+                          help="Force detailed errors off")
 
     def configure(self, options, config):
         # Configure
