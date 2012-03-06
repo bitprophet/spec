@@ -4,20 +4,11 @@
 
 `spec` is a Python testing tool that turns this:
 
-<pre style="background-color: #000; color: #FFF;">
-TestMyClass.test_has_an_attribute ... ok
-TestMyClass.test_should_perform_some_action ... FAIL
-TestMyClass.test_can_stand_on_its_head ... SKIP
-</pre>
+![Boring old nosetests output](/web/before.png)
 
 into this:
 
-<pre style="background-color: #000; color: #FFF;">
-MyClass
-- <span style="color: green">has an attribute</span>
-- <span style="color: purple">should perform some action</span>
-- <span style="color: yellow">can stand on its head</span>
-</pre>
+![Awesome new spec output](/web/after.png)
 
 Specifically, `spec` provides:
 
