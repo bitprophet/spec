@@ -4,11 +4,12 @@
 
 `spec` is a Python testing tool that turns this:
 
-![Boring old nosetests output](/web/before.png)
+![Boring old nosetests
+output](https://github.com/bitprophet/spec/raw/master/web/before.png)
 
 into this:
 
-![Awesome new spec output](/web/after.png)
+![Awesome new spec output](https://github.com/bitprophet/spec/raw/master/web/after.png)
 
 Specifically, `spec` provides:
 
