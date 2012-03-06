@@ -1,4 +1,5 @@
 from nose import SkipTest
+from nose.tools import *
 
 from spec.plugin import SpecPlugin
 from spec.cli import main
