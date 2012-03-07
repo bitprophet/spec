@@ -20,6 +20,8 @@ class SpecSelector(nose.selector.Selector):
     def __init__(self, *args, **kwargs):
         super(SpecSelector, self).__init__(*args, **kwargs)
         self._valid_modules = []
+        # Handle --tests=
+        self._valid_named_modules = map(os.path.abspath, self.config.testNames)
         self._valid_classes = []
 
     def wantDirectory(self, dirname):
@@ -65,7 +67,11 @@ class SpecSelector(nose.selector.Selector):
         Needs to be its own method so it can be called from both wantClass and
         registerGoodClass.
         """
-        valid = inspect.getmodule(class_) in self._valid_modules
+        module = inspect.getmodule(class_)
+        valid = (
+            module in self._valid_modules
+            or module.__file__ in self._valid_named_modules
+        )
         return valid and not private(class_)
 
     def wantClass(self, class_):
@@ -124,6 +130,14 @@ class CustomSelector(nose.plugins.Plugin):
         return results
 
 
+def args_contains(options):
+    for opt in options:
+        for arg in sys.argv[1:]:
+            if arg.startswith(opt):
+                return True
+    return False
+
+
 # Nose invocation
 def main():
     defaults = [
@@ -137,20 +151,13 @@ def main():
     # Set up default test location ('tests/') and custom selector,
     # only if user isn't giving us specific options of their own.
     # FIXME: see if there's a way to do it post-optparse, this is brittle.
-    good = True
-    args = sys.argv[1:]
-    for opt in "-w --where --tests --match -m -i --include -e --exclude".split():
-        for arg in sys.argv[1:]:
-            if arg.startswith(opt):
-                good = False
-                break
-        if not good:
-            break
+    good = not args_contains("--match -m -i --include -e --exclude".split())
     plugins = []
     if good and os.path.isdir('tests'):
         plugins = [CustomSelector()]
-        defaults.append("--where=tests")
+        if not args_contains(['--tests', '-w', '--where']):
+            defaults.append("--where=tests")
     nose.core.run(
-        argv=['nosetests'] + defaults + args,
+        argv=['nosetests'] + defaults + sys.argv[1:],
         addplugins=plugins
     )
