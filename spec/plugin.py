@@ -372,7 +372,7 @@ class SpecPlugin(Plugin):
         self._print_spec('ok', test)
 
     def addFailure(self, test, err):
-        self._print_spec('failure', test, 'FAILED')
+        self._print_spec('failure', test, '')
         self._failures.append((test, err))
 
     def addError(self, test, err):
@@ -381,12 +381,12 @@ class SpecPlugin(Plugin):
 
         klass = err[0]
         if issubclass(klass, nose.DeprecatedTest):
-            blurt('deprecated', 'DEPRECATED')
+            blurt('deprecated', '')
         elif issubclass(klass, SkipTest):
-            blurt('skipped', 'SKIPPED')
+            blurt('skipped', '')
         else:
             self._errors.append((test, err))
-            blurt('error', 'ERROR')
+            blurt('error', '')
 
     def afterTest(self, test):
         self.stream.capture()
