@@ -338,7 +338,7 @@ class SpecPlugin(Plugin):
             'ok': 'green',
             'deprecated': 'yellow',
             'skipped': 'yellow',
-            'failure': 'purple',
+            'failure': 'red',
             'identifier': 'cyan',
             'file': 'blue',
         }.items():
