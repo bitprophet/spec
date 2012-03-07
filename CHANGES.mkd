@@ -11,6 +11,9 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 * Add support for nested inner classes as recursive contexts.
 * Add command-line option to disable our automatic toggle of the built-in
   ``--detailed-errors`` flag.
+* Tweaked color scheme so purples became reds.
+* Removed old Nose-style SKIPPED/FAILED/etc suffixes which look ugly in spec
+  format.
 
 ## 0.9.3
 #### (2011.11.06)
