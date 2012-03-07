@@ -3,18 +3,18 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 ## 0.9.4
 ### (20XX.YY.ZZ)
 
-* Filter out `.pyc` files when selecting tests. Fixes #15; thanks again to
-  Janne.
 * Make sure `spec` does not blow up when no `tests/` directory exists. Fixes
   #14. Thanks to Janne Härkönen for the patch.
-* Actually skip leading-underscore files; docs did not match implementation.
+* Filter out `.pyc` files when selecting tests. Fixes #15; thanks again to
+  Janne.
+* Actually skip leading-underscore files; implementation did not match docs.
 * Add support for nested inner classes as recursive contexts.
 * Add command-line option to disable our automatic toggle of the built-in
-  ``--detailed-errors`` flag.
+  `--detailed-errors` flag.
 * Tweak color scheme so purples became reds.
-* Remove old Nose-style SKIPPED/FAILED/etc suffixes which look ugly in spec
+* Remove old Nose-style SKIPPED/FAILED/etc suffixes when showing spec
   format.
-* Re-integrate support for individual test module targeting (--tests=).
+* Re-integrate support for individual test module targeting (`--tests=<path>`).
 
 ## 0.9.3
 #### (2011.11.06)
