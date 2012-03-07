@@ -17,6 +17,11 @@ def private(obj):
 
 
 class SpecSelector(nose.selector.Selector):
+    def __init__(self, *args, **kwargs):
+        super(SpecSelector, self).__init__(*args, **kwargs)
+        self._valid_modules = []
+        self._valid_classes = []
+
     def wantDirectory(self, dirname):
         # Given a sane root such as tests/, we want everything.
         # Some other mechanism already allows for hidden directories using a _
@@ -34,8 +39,6 @@ class SpecSelector(nose.selector.Selector):
         # You guessed it -- if it's being picked up as a module, we want it.
         # However, also store it so we can tell apart "native" class/func
         # objects from ones imported *into* test modules.
-        if not hasattr(self, '_valid_modules'):
-            self._valid_modules = []
         self._valid_modules.append(module)
         return True
 
@@ -50,8 +53,6 @@ class SpecSelector(nose.selector.Selector):
         """
         Internal bookkeeping to handle nested classes
         """
-        if not hasattr(self, '_valid_classes'):
-            self._valid_classes = []
         # Class itself added to "good" list
         self._valid_classes.append(class_)
         # Recurse into any inner classes
