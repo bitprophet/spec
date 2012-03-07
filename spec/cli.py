@@ -157,7 +157,7 @@ def main():
         plugins = [CustomSelector()]
         if not args_contains(['--tests', '-w', '--where']):
             defaults.append("--where=tests")
-    nose.core.run(
+    nose.core.main(
         argv=['nosetests'] + defaults + sys.argv[1:],
         addplugins=plugins
     )

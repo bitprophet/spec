@@ -1,5 +1,11 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
+## 0.9.5
+### (2012.03.07)
+
+* Use `nose.core.main` instead of `nose.core.run` so `spec` exits with nonzero
+  return values upon test failure.
+
 ## 0.9.4
 ### (2012.03.07)
 
