@@ -9,6 +9,7 @@ setup(
     url='https://github.com/bitprophet/spec',
     license='MIT',
     packages=find_packages(),
+    install_requires=['nose>=1.1,<1.2'],
     entry_points={
         'nose.plugins.0.10': [
             'spec = spec:SpecPlugin',
