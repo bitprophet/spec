@@ -13,7 +13,8 @@ from spec.utils import class_members
 
 
 def private(obj):
-    return obj.__name__.startswith('_')
+    return obj.__name__.startswith('_') or \
+           getattr(obj, '_spec__is_private', False)
 
 
 class SpecSelector(nose.selector.Selector):

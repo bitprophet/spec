@@ -1,6 +1,13 @@
 from nose.util import isclass
 
 
+def dont_show(obj):
+    """
+    Mark object as private.
+    """
+    obj._spec__is_private = True
+    return obj
+
 def is_public_class(name, value):
     return isclass(value) and not name.startswith('_')
 
