@@ -13,6 +13,7 @@ setup(
     entry_points={
         'nose.plugins.0.10': [
             'spec = spec:SpecPlugin',
+            'specselector = spec.cli:CustomSelector',
         ],
         'console_scripts': [
             'spec = spec:main'
