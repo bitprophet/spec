@@ -3,7 +3,7 @@ from nose.tools import *
 
 from spec.plugin import SpecPlugin
 from spec.cli import main
-from spec.utils import InnerClassParser
+from spec.utils import InnerClassParser, dont_show
 
 
 class Spec(object):
