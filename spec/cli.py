@@ -144,7 +144,7 @@ def main():
         # Don't capture stdout
         '--nocapture',
         # Use the spec plugin
-        '--with-spec',
+        '--with-specplugin', '--with-specselector',
         # Enable useful asserts
         '--detailed-errors',
     ]
