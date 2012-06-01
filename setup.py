@@ -18,6 +18,7 @@ setup(
             'spec = spec:main'
         ],
     },
+    use_2to3=True,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Plugins',
