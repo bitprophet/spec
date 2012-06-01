@@ -111,10 +111,10 @@ class SpecSelector(nose.selector.Selector):
 # Plugin for loading selector & implementing some custom hooks too
 # (such as appending more test cases from gathered classes)
 class CustomSelector(nose.plugins.Plugin):
-    enabled = True
+    name = "specselector"
 
     def configure(self, options, conf):
-        pass
+        nose.plugins.Plugin.configure(self, options, conf)
 
     def prepareTestLoader(self, loader):
         loader.selector = SpecSelector(loader.config)
