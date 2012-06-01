@@ -1,6 +1,13 @@
 from nose.util import isclass
 
 
+def dont_show(obj):
+    """
+    Mark object as private.
+    """
+    obj._spec__is_private = True
+    return obj
+
 def is_public_class(name, value):
     return isclass(value) and not name.startswith('_')
 
@@ -26,6 +33,11 @@ class InnerClassParser(type):
     inner class or a top level one.
     """
     def __new__(cls, name, bases, attrs):
+        # don't show setup nor teardown
+        for x in ['setup', 'teardown']:
+            if x in attrs:
+                attrs[x] = dont_show(attrs[x])
+
         new_class = type.__new__(cls, name, bases, attrs)
         flag_inner_classes(new_class)
         return new_class
