@@ -6,8 +6,12 @@ import sys
 import time
 import traceback
 import unittest
-from StringIO import StringIO
 from functools import partial
+
+try:
+    from StringIO import StringIO
+except ImportError: # pragma: no cover
+    from io import StringIO
 
 # Python 2.7: _WritelnDecorator moved.
 try:
