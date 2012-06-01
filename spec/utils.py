@@ -1,7 +1,7 @@
 from nose.util import isclass
 
 
-def dont_show(obj):
+def hide(obj):
     """
     Mark object as private.
     """
@@ -31,7 +31,7 @@ def autohide(obj):
     # Members on obj
     for name, item in vars(obj).iteritems():
         if callable(item) and name in ('setup', 'teardown'):
-            item = dont_show(item)
+            item = hide(item)
     # Recurse into class members
     for name, subclass in class_members(obj):
         autohide(subclass)
