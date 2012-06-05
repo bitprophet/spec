@@ -1,5 +1,11 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
+## 0.9.6
+### (2012.MM.DD)
+
+* Add number of skipped tests to successful summary output. Previously, number
+  of skipped tests was only printed when other failures occurred.
+
 ## 0.9.5
 ### (2012.03.07)
 

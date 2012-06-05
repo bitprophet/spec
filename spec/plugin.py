@@ -464,7 +464,9 @@ class SpecPlugin(Plugin):
         )
         # Did we fail, and if so, how badly?
         if success:
-            print >>self.stream, self.ok("OK")
+            skipped = len(result.skipped)
+            skipped_str = "(" + self.skipped("%i skipped" % skipped) + ")"
+            print >>self.stream, self.ok("OK"), skipped_str if skipped else ""
         else:
             types = (
                 ('failures', 'failure'),
