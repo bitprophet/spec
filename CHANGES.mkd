@@ -1,10 +1,19 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
 ## 0.9.6
-### (2012.MM.DD)
+### (2012.06.07)
 
 * Add number of skipped tests to successful summary output. Previously, number
   of skipped tests was only printed when other failures occurred.
+* Add `@hide` decorator to explicitly mark functions as not being tests, thanks
+  to Maciej Konieczny for the initial work.
+* Auto-hide `setup` and `teardown` methods/functions so they aren't run as /
+  shown as tests themselves. Thanks again to Maciej for the initial pull
+  request.
+* Refactor `spec`'s relaxed test discovery so it can be invoked as its own Nose
+  plugin/option (though `spec` the program still has its own use and still
+  exists.) Thanks to Marc Abramowitz (and thanks to him also for some minor
+  internal refactorings & project support tweaks.)
 
 ## 0.9.5
 ### (2012.03.07)
