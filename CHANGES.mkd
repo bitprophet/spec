@@ -1,5 +1,11 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
+## 0.9.7
+### (2012.XX.YY)
+
+* Add `@trap` decorator to allow trapping stdout/stderr for certain tests.
+
+
 ## 0.9.6
 ### (2012.06.07)
 
