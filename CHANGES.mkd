@@ -4,6 +4,8 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 ### (2012.XX.YY)
 
 * Add `@trap` decorator to allow trapping stdout/stderr for certain tests.
+* Strip whitespace from docstrings used as test names, to avoid clunky looking
+  output.
 
 
 ## 0.9.6

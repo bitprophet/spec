@@ -269,7 +269,7 @@ class SpecOutputStream(OutputStream):
         context._printed = True
 
     def print_spec(self, color_func, test, status=None):
-        spec = testDescription(test)
+        spec = testDescription(test).strip()
         if not isinstance(spec, types.GeneratorType):
             spec = [spec]
         for s in spec:
