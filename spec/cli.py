@@ -3,6 +3,7 @@ import sys
 import os
 
 import nose
+import six
 
 from spec.utils import class_members
 
@@ -84,10 +85,14 @@ class SpecSelector(nose.selector.Selector):
         return good
 
     def wantMethod(self, method):
-        # Short-circuit on odd results
-        if not hasattr(method, 'im_class'):
-            return False
-        cls = method.im_class
+        if six.PY3:
+            cls = method.__self__.__class__
+        else:
+            # Short-circuit on odd results
+            if not hasattr(method, 'im_class'):
+                return False
+            cls = method.im_class
+
         # As with functions, we want only items defined on also-valid
         # containers (classes), and only ones not conventionally private.
         valid_class = cls in self._valid_classes

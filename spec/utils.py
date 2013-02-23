@@ -1,3 +1,5 @@
+import six
+
 from nose.util import isclass
 
 
@@ -12,7 +14,7 @@ def is_public_class(name, value):
     return isclass(value) and not name.startswith('_')
 
 def class_members(obj):
-    return filter(lambda x: is_public_class(*x), vars(obj).iteritems())
+    return [x for x in six.iteritems(vars(obj)) if is_public_class(*x)]
 
 def flag_inner_classes(obj):
     """
@@ -29,7 +31,7 @@ def autohide(obj):
     Automatically hide setup() and teardown() methods, recursively.
     """
     # Members on obj
-    for name, item in vars(obj).iteritems():
+    for name, item in six.iteritems(vars(obj)):
         if callable(item) and name in ('setup', 'teardown'):
             item = hide(item)
     # Recurse into class members
