@@ -9,7 +9,7 @@ Based on original code from Fabric 1.x, specifically:
 Though modifications have been made since.
 """
 import sys
-from StringIO import StringIO
+from io import StringIO
 from functools import wraps
 
 

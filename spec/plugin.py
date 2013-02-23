@@ -1,4 +1,5 @@
 import doctest
+import io
 import os
 import re
 import types
@@ -6,12 +7,8 @@ import sys
 import time
 import traceback
 import unittest
-from functools import partial
 
-try:
-    from StringIO import StringIO
-except ImportError: # pragma: no cover
-    from io import StringIO
+from functools import partial
 
 # Python 2.7: _WritelnDecorator moved.
 try:
@@ -27,6 +24,7 @@ try:
 except AttributeError:
     SkipTest = nose.SkipTest
 
+import six
 
 from nose.plugins import Plugin
 
@@ -154,7 +152,7 @@ def noseFunctionDescription(test):
         if hasattr(test.test, 'description'):
             return test.test.description
         return "holds for %s" % ', '.join(map(str, test.arg))
-    return test.test.func_doc or underscored2spec(test.test.func_name)
+    return test.test.__doc__ or underscored2spec(test.test.__name__)
 
 
 # Different than other similar functions, this one returns a generator
@@ -189,10 +187,15 @@ def contextDescription(context):
         (types.ModuleType, underscoredDescription),
         (types.FunctionType, underscoredDescription),
         (doctest.DocTestCase, doctestContextDescription),
-        # Handle both old and new style classes.
-        (types.ClassType, camelcaseDescription),
         (type, camelcaseDescription),
     ]
+
+    if not six.PY3:
+        supported_context_types += [
+            # Handle both old and new style classes.
+            (types.ClassType, camelcaseDescription),
+        ]
+
     return dispatch_on_type(supported_context_types, context)
 
 
@@ -214,7 +217,7 @@ def testContext(test):
 
 class OutputStream(_WritelnDecorator):
     def __init__(self, on_stream, off_stream):
-        self.capture_stream = StringIO()
+        self.capture_stream = io.StringIO()
         self.on_stream = on_stream
         self.off_stream = off_stream
         self.stream = on_stream
@@ -337,7 +340,7 @@ class SpecPlugin(Plugin):
             options.verbosity = max(options.verbosity, 2)
         self.spec_doctests = options.spec_doctests
         # Color setup
-        for label, color in {
+        for label, color in list({
             'error': 'red',
             'ok': 'green',
             'deprecated': 'yellow',
@@ -345,7 +348,7 @@ class SpecPlugin(Plugin):
             'failure': 'red',
             'identifier': 'cyan',
             'file': 'blue',
-        }.items():
+        }.items()):
             # No color: just print() really
             func = lambda text, bold=False: text
             if not options.no_spec_color:
@@ -437,17 +440,17 @@ class SpecPlugin(Plugin):
                     self.stream.write(indentation)
                     self.stream.writelines(tb_lines)
                 else:
-                    print >>self.stream, indentation + line
+                    six.print_(indentation + line, file=self.stream)
             elif line.startswith("    "):
-                print >>self.stream, self.identifier(indentation + line)
+                six.print_(self.identifier(indentation + line), file=self.stream)
             elif line.startswith("Traceback (most recent call last)"):
-                print >>self.stream, indentation + line
+                six.print_(indentation + line, file=self.stream)
             else:
-                print >>self.stream, self.error(indentation + line)
+                six.print_(self.error(indentation + line), file=self.stream)
 
     def finalize(self, result):
         self.stream.on()
-        print >>self.stream, ""
+        six.print_("", file=self.stream)
         self.print_tracebacks("ERROR", self._errors)
         self.print_tracebacks("FAIL", self._failures)
         self.print_summary(result)
@@ -457,16 +460,16 @@ class SpecPlugin(Plugin):
         num_tests = result.testsRun
         success = result.wasSuccessful()
         # How many in how long
-        print >>self.stream, "Ran %s test%s in %s" % (
+        six.print_("Ran %s test%s in %s" % (
             (self.ok if success else self.error)(num_tests),
             "s" if num_tests > 1 else "",
             self.format_seconds(time.time() - self.start_time)
-        )
+        ), file=self.stream)
         # Did we fail, and if so, how badly?
         if success:
             skipped = len(result.skipped)
             skipped_str = "(" + self.skipped("%i skipped" % skipped) + ")"
-            print >>self.stream, self.ok("OK"), skipped_str if skipped else ""
+            six.print_(self.ok("OK"), skipped_str if skipped else "", file=self.stream)
         else:
             types = (
                 ('failures', 'failure'),
@@ -480,11 +483,11 @@ class SpecPlugin(Plugin):
                 if num:
                     text = self.color[color](text)
                 pairs.append("%s=%s" % (label, text))
-            print >>self.stream, "%s (%s)" % (
+            six.print_("%s (%s)" % (
                 self.failure("FAILED"),
                 ", ".join(pairs)
-            )
-        print >>self.stream, ""
+            ), file=self.stream)
+        six.print_("", file=self.stream)
 
     def format_seconds(self, n_seconds):
         """Format a time in seconds."""
