@@ -3,7 +3,9 @@
 
 import unittest
 import nose
+import six
 from nose.plugins import PluginTester
+
 from spec import Spec
 
 
@@ -26,7 +28,7 @@ class _SpecPluginTestCase(PluginTester, unittest.TestCase):
                 (_prepend_in_each_line(needle), _prepend_in_each_line(haystack))
 
     def assertContainsInOutput(self, string):
-        self.assertContains(string, str(self.output))
+        self.assertContains(string, six.text_type(self.output))
 
     def failIfContains(self, needle, haystack):
         assert needle not in haystack,\
@@ -34,7 +36,7 @@ class _SpecPluginTestCase(PluginTester, unittest.TestCase):
                 (_prepend_in_each_line(needle), _prepend_in_each_line(haystack))
 
     def failIfContainsInOutput(self, string):
-        self.failIfContains(string, str(self.output))
+        self.failIfContains(string, six.text_type(self.output))
 
 
 class TestPluginSpecWithFoobar(_SpecPluginTestCase):
