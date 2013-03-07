@@ -3,7 +3,6 @@ import io
 import os
 import re
 import types
-import sys
 import time
 import traceback
 import unittest
