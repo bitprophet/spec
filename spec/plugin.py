@@ -151,7 +151,7 @@ def noseFunctionDescription(test):
     if test.descriptor is not None:
         if hasattr(test.test, 'description'):
             return test.test.description
-        return "holds for %s" % ', '.join(map(str, test.arg))
+        return "holds for %s" % ', '.join(map(six.text_type, test.arg))
     return test.test.__doc__ or underscored2spec(test.test.__name__)
 
 
@@ -405,7 +405,7 @@ class SpecPlugin(Plugin):
         }[label]
         for item in items:
             test, trace = item
-            desc = test.shortDescription() or str(test)
+            desc = test.shortDescription() or six.text_type(test)
             self.stream.writeln("=" * 70)
             self.stream.writeln("%s: %s" % (
                 self.color[problem_color](label),
@@ -479,7 +479,7 @@ class SpecPlugin(Plugin):
             pairs = []
             for label, color in types:
                 num = len(getattr(result, label))
-                text = str(num)
+                text = six.text_type(num)
                 if num:
                     text = self.color[color](text)
                 pairs.append("%s=%s" % (label, text))
