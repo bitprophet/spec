@@ -216,7 +216,7 @@ def testContext(test):
 
 class OutputStream(_WritelnDecorator):
     def __init__(self, on_stream, off_stream):
-        self.capture_stream = io.BytesIO()
+        self.capture_stream = io.StringIO()
         self.on_stream = on_stream
         self.off_stream = off_stream
         self.stream = on_stream
