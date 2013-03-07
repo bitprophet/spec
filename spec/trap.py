@@ -39,11 +39,11 @@ class CarbonCopy(io.BytesIO):
 
 def trap(func):
     """
-    Replaces sys.std(out|err) with ``io.BytesIO``s during the test, restored after.
+    Replaces sys.std(out|err) with ``BytesIO``s during the test, restored after.
 
-    In addition, a new combined-streams output (another io.BytesIO) will appear
-    at ``sys.stdall``. This io.BytesIO will resemble what a user sees at a
-    terminal, i.e. both streams intermingled.
+    In addition, a new combined-streams output (another BytesIO) will appear at
+    ``sys.stdall``. This BytesIO will resemble what a user sees at a terminal,
+    i.e. both streams intermingled.
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
