@@ -8,23 +8,24 @@ Based on original code from Fabric 1.x, specifically:
 
 Though modifications have been made since.
 """
-from io import StringIO
+from io import BytesIO
 import sys
-
 from functools import wraps
 
+import six
 
-class CarbonCopy(StringIO):
+
+class CarbonCopy(BytesIO):
     """
-    A StringIO capable of multiplexing its writes to other buffer objects.
+    A BytesIO capable of multiplexing its writes to other buffer objects.
     """
-    def __init__(self, buffer='', cc=None):
+    def __init__(self, buffer=six.b(''), cc=None):
         """
         If ``cc`` is given and is a file-like object or an iterable of same,
-        it/they will be written to whenever this StringIO instance is written
+        it/they will be written to whenever this BytesIO instance is written
         to.
         """
-        StringIO.__init__(self, buffer)
+        BytesIO.__init__(self, buffer)
         if cc is None:
             cc = []
         elif hasattr(cc, 'write'):
@@ -32,22 +33,28 @@ class CarbonCopy(StringIO):
         self.cc = cc
 
     def write(self, s):
-        StringIO.write(self, s)
+        BytesIO.write(self, s)
         for writer in self.cc:
             writer.write(s)
+
+    # Dumb hack to deal with py3 expectations; real sys.std(out|err) in Py3
+    # requires writing to a buffer attribute obj in some situations.
+    @property
+    def buffer(self):
+        return self
 
 
 def trap(func):
     """
-    Replaces sys.std(out|err) with ``StringIO``s during the test, restored after.
+    Replaces sys.std(out|err) with ``BytesIO``s during the test, restored after.
 
-    In addition, a new combined-streams output (another StringIO) will appear at
-    ``sys.stdall``. This StringIO will resemble what a user sees at a terminal,
+    In addition, a new combined-streams output (another BytesIO) will appear at
+    ``sys.stdall``. This BytesIO will resemble what a user sees at a terminal,
     i.e. both streams intermingled.
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        sys.stdall = StringIO()
+        sys.stdall = BytesIO()
         my_stdout, sys.stdout = sys.stdout, CarbonCopy(cc=sys.stdall)
         my_stderr, sys.stderr = sys.stderr, CarbonCopy(cc=sys.stdall)
         try:
