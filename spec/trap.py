@@ -21,7 +21,7 @@ class CarbonCopy(IO):
     """
     # NOTE: because StringIO.StringIO on Python 2 is an old-style class we
     # cannot use super() :(
-    def __init__(self, buffer=six.b(''), cc=None):
+    def __init__(self, buffer=b'', cc=None):
     #def __init__(self, buffer='', cc=None):
         """
         If ``cc`` is given and is a file-like object or an iterable of same,
