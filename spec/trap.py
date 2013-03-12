@@ -8,24 +8,26 @@ Based on original code from Fabric 1.x, specifically:
 
 Though modifications have been made since.
 """
-from io import BytesIO
 import sys
 from functools import wraps
 
 import six
+from six import BytesIO as IO
 
 
-class CarbonCopy(BytesIO):
+class CarbonCopy(IO):
     """
-    A BytesIO capable of multiplexing its writes to other buffer objects.
+    An IO wrapper capable of multiplexing its writes to other buffer objects.
     """
+    # NOTE: because StringIO.StringIO on Python 2 is an old-style class we
+    # cannot use super() :(
     def __init__(self, buffer=six.b(''), cc=None):
+    #def __init__(self, buffer='', cc=None):
         """
         If ``cc`` is given and is a file-like object or an iterable of same,
-        it/they will be written to whenever this BytesIO instance is written
-        to.
+        it/they will be written to whenever this instance is written to.
         """
-        BytesIO.__init__(self, buffer)
+        IO.__init__(self, buffer)
         if cc is None:
             cc = []
         elif hasattr(cc, 'write'):
@@ -33,28 +35,28 @@ class CarbonCopy(BytesIO):
         self.cc = cc
 
     def write(self, s):
-        BytesIO.write(self, s)
+        IO.write(self, s)
         for writer in self.cc:
             writer.write(s)
 
     # Dumb hack to deal with py3 expectations; real sys.std(out|err) in Py3
     # requires writing to a buffer attribute obj in some situations.
-    @property
-    def buffer(self):
-        return self
+    #@property
+    #def buffer(self):
+    #    return self
 
 
 def trap(func):
     """
-    Replaces sys.std(out|err) with ``BytesIO``s during the test, restored after.
+    Replace sys.std(out|err) with a wrapper during execution, restored after.
 
-    In addition, a new combined-streams output (another BytesIO) will appear at
-    ``sys.stdall``. This BytesIO will resemble what a user sees at a terminal,
-    i.e. both streams intermingled.
+    In addition, a new combined-streams output (another wrapper) will appear at
+    ``sys.stdall``. This stream will resemble what a user sees at a terminal,
+    i.e. both out/err streams intermingled.
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        sys.stdall = BytesIO()
+        sys.stdall = IO()
         my_stdout, sys.stdout = sys.stdout, CarbonCopy(cc=sys.stdall)
         my_stderr, sys.stderr = sys.stderr, CarbonCopy(cc=sys.stdall)
         try:

@@ -1,31 +1,26 @@
 import doctest
-import io
 import os
 import re
 import types
 import time
 import traceback
 import unittest
-
 from functools import partial
-
 # Python 2.7: _WritelnDecorator moved.
 try:
     from unittest import _WritelnDecorator
 except ImportError:
     from unittest.runner import _WritelnDecorator
 
+import six
+from six import BytesIO as IO
 import nose
-
+from nose.plugins import Plugin
 # Python 2.7: nose uses unittest's builtin SkipTest class
 try:
     SkipTest = unittest.case.SkipTest
 except AttributeError:
     SkipTest = nose.SkipTest
-
-import six
-
-from nose.plugins import Plugin
 
 
 ################################################################################
@@ -216,7 +211,7 @@ def testContext(test):
 
 class OutputStream(_WritelnDecorator):
     def __init__(self, on_stream, off_stream):
-        self.capture_stream = io.StringIO()
+        self.capture_stream = IO()
         self.on_stream = on_stream
         self.off_stream = off_stream
         self.stream = on_stream
