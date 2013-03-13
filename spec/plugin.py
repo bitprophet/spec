@@ -3,7 +3,6 @@ import os
 import re
 import types
 import time
-import traceback
 import unittest
 from functools import partial
 # Python 2.7: _WritelnDecorator moved.
@@ -22,6 +21,9 @@ try:
 except AttributeError:
     SkipTest = nose.SkipTest
 
+# Use custom-as-of-nose-1.3 format_exception which bridges some annoying
+# python2 vs python3 issues.
+from nose.plugins.xunit import format_exception
 
 ################################################################################
 ## Functions for constructing specifications based on nose testing objects.
@@ -407,7 +409,7 @@ class SpecPlugin(Plugin):
             ))
             self.stream.writeln("-" * 70)
             # format_exception() is...very odd re: how it breaks into lines.
-            trace = "".join(traceback.format_exception(*trace)).split("\n")
+            trace = "".join(format_exception(trace)).split("\n")
             self.print_colorized_traceback(trace)
 
     def print_colorized_traceback(self, formatted_traceback, indent_level=0):
