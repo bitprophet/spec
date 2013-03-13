@@ -13,7 +13,7 @@ except ImportError:
     from unittest.runner import _WritelnDecorator
 
 import six
-from six import BytesIO as IO
+from six import StringIO as IO
 import nose
 from nose.plugins import Plugin
 # Python 2.7: nose uses unittest's builtin SkipTest class

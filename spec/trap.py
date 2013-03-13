@@ -12,7 +12,7 @@ import sys
 from functools import wraps
 
 import six
-from six import BytesIO as IO
+from six import StringIO as IO
 
 
 class CarbonCopy(IO):
@@ -21,8 +21,7 @@ class CarbonCopy(IO):
     """
     # NOTE: because StringIO.StringIO on Python 2 is an old-style class we
     # cannot use super() :(
-    def __init__(self, buffer=b'', cc=None):
-    #def __init__(self, buffer='', cc=None):
+    def __init__(self, buffer='', cc=None):
         """
         If ``cc`` is given and is a file-like object or an iterable of same,
         it/they will be written to whenever this instance is written to.
