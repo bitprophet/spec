@@ -12,7 +12,7 @@ import sys
 from functools import wraps
 
 import six
-from six import StringIO as IO
+from six import BytesIO as IO
 
 
 class CarbonCopy(IO):
@@ -21,7 +21,7 @@ class CarbonCopy(IO):
     """
     # NOTE: because StringIO.StringIO on Python 2 is an old-style class we
     # cannot use super() :(
-    def __init__(self, buffer='', cc=None):
+    def __init__(self, buffer=b'', cc=None):
         """
         If ``cc`` is given and is a file-like object or an iterable of same,
         it/they will be written to whenever this instance is written to.
@@ -40,9 +40,16 @@ class CarbonCopy(IO):
 
     # Dumb hack to deal with py3 expectations; real sys.std(out|err) in Py3
     # requires writing to a buffer attribute obj in some situations.
-    #@property
-    #def buffer(self):
-    #    return self
+    @property
+    def buffer(self):
+        return self
+
+    # Make sure we always hand back strings, even on Python 3
+    def getvalue(self):
+        ret = super(CarbonCopy, self).getvalue()
+        if six.PY3:
+            ret = ret.decode('utf-8')
+        return ret
 
 
 def trap(func):
@@ -55,7 +62,9 @@ def trap(func):
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
-        sys.stdall = IO()
+        # Use another CarbonCopy even though we're not cc'ing; for our "write
+        # bytes, return strings on py3" behavior. Meh.
+        sys.stdall = CarbonCopy()
         my_stdout, sys.stdout = sys.stdout, CarbonCopy(cc=sys.stdall)
         my_stderr, sys.stderr = sys.stderr, CarbonCopy(cc=sys.stdall)
         try:
