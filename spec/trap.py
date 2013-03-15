@@ -46,7 +46,7 @@ class CarbonCopy(IO):
 
     # Make sure we always hand back strings, even on Python 3
     def getvalue(self):
-        ret = super(CarbonCopy, self).getvalue()
+        ret = IO.getvalue(self)
         if six.PY3:
             ret = ret.decode('utf-8')
         return ret
