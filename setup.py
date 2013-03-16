@@ -10,6 +10,9 @@ setup(
     license='MIT',
     packages=find_packages(),
     install_requires=['nose>=1.3', 'six'],
+    dependency_links=[
+        'https://github.com/nose-devs/nose/tarball/c0f777e488337dc7dde933453799986c46b37deb#egg=nose-1.3.0',
+    ],
     entry_points={
         'nose.plugins.0.10': [
             'spec = spec:SpecPlugin',
