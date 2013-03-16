@@ -2,7 +2,7 @@
 
 ## What is it?
 
-`spec` is a Python testing tool that turns this:
+`spec` is a Python (2.6+ and 3.3+) testing tool that turns this:
 
 ![Boring old nosetests
 output](https://github.com/bitprophet/spec/raw/master/web/before.png)
