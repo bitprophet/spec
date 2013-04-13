@@ -16,14 +16,24 @@ def is_public_class(name, value):
 def class_members(obj):
     return [x for x in six.iteritems(vars(obj)) if is_public_class(*x)]
 
+@property
+def get_parent(self):
+    parent = self._parent()
+    parent.setup()
+    return parent
+
 def flag_inner_classes(obj):
     """
     Mutates any attributes on ``obj`` which are classes, with link to ``obj``.
+
+    Adds a convenience accessor which instantiates ``obj`` and then calls its
+    ``setup`` method.
 
     Recurses on those objects as well.
     """
     for tup in class_members(obj):
         tup[1]._parent = obj
+        tup[1].parent = get_parent
         flag_inner_classes(tup[1])
 
 def autohide(obj):
