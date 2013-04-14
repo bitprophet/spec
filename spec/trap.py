@@ -34,6 +34,11 @@ class CarbonCopy(IO):
         self.cc = cc
 
     def write(self, s):
+        # Ensure we always write bytes. This means that wrapped code calling
+        # print(<a string object>) in Python 3 will still work. Sigh.
+        if not isinstance(s, six.binary_type):
+            s = s.encode('utf-8')
+        # Write out to our capturing object & any CC's
         IO.write(self, s)
         for writer in self.cc:
             writer.write(s)
