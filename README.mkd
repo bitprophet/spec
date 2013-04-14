@@ -166,40 +166,6 @@ The above results in output like so:
 This indentation makes output even easier to follow & helps keep things
 organized.
 
-#### Access to outer classes
-
-Inner classes may access their outer classes' state (i.e. to take advantage of
-`setup` methods) by accessing `self.parent`, which implicitly instantiates a
-copy of the wrapping class and calls its `setup` method, then returns the
-instance. E.g.:
-
-```python
-class OuterClass(Spec):
-    def setup(self):
-        self.x = 'y'
-
-    def top_level_test(self):
-        assert self.x == 'y' # works fine, of course
-
-    class about_a_method_or_something:
-        def some_inner_test_here(self):
-            assert self.parent.x == 'y' # tada
-```
-
-**Note**: `self.parent` instantiates and calls `setup` every time it is
-accessed; if you have an expensive `setup` in the outer class being accessed,
-consider assigning the result to a variable first, perhaps in the inner class'
-own `setup`, e.g.:
-
-```python
-class Outer(Spec):
-    def setup(self):
-        self.x = 'y'
-
-    class inner:
-        def setup(self):
-            self.x = self.parent.x
-```
 
 ### Usage tips
 

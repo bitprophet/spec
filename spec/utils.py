@@ -16,11 +16,12 @@ def is_public_class(name, value):
 def class_members(obj):
     return [x for x in six.iteritems(vars(obj)) if is_public_class(*x)]
 
-@property
-def get_parent(self):
-    parent = self._parent()
-    parent.setup()
-    return parent
+def my_getattr(self, name):
+    if not self._parent_inst:
+        parent = self._parent()
+        parent.setup()
+        self._parent_inst = parent
+    return getattr(self._parent_inst, name)
 
 def flag_inner_classes(obj):
     """
@@ -33,7 +34,8 @@ def flag_inner_classes(obj):
     """
     for tup in class_members(obj):
         tup[1]._parent = obj
-        tup[1].parent = get_parent
+        tup[1]._parent_inst = None
+        tup[1].__getattr__ = my_getattr
         flag_inner_classes(tup[1])
 
 def autohide(obj):
