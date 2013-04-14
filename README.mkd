@@ -15,11 +15,11 @@ Specifically, `spec` provides:
 
 * Colorized, specification style output
 * Colorized tracebacks and summary
-* Optional CLI tool which enables useful non-default options and implements
+* Test-running CLI tool which enables useful non-default options and implements
   relaxed test discovery for less `test_annoying.py:TestBoilerplate.test_code`
   and more `readable.py:Classes.and_methods`.
 
-## Details
+## Spec-style output
 
 `spec` is a [BDD](http://behavior-driven.org)-esque
 [nose](http://nose.readthedocs.org) plugin designed to provide "specification"
@@ -87,12 +87,12 @@ In other words:
 
 ## Test runner
 
-`spec` also ships with a same-name command-line tool which may be used as a
-more liberal `nosetests`. In addition to toggling a number of useful default
-options (such as `nose`'s builtin `--detailed-errors`) `spec`-the-program will
-honor any and all public objects defined within your project's `tests`
-directory, meaning any file, function or class whose name does not begin with
-an underscore (`'_'`) and which is defined locally.
+`spec` ships with a same-name command-line tool which may be used as a more
+liberal `nosetests`. In addition to toggling a number of useful default options
+(such as `nose`'s builtin `--detailed-errors`) `spec`-the-program will honor
+any and all public objects defined within your project's `tests` directory,
+meaning any file, function or class whose name does not begin with an
+underscore (`'_'`) and which is defined locally.
 
 For example, given the following code inside `tests/feature_name.py`:
 
@@ -129,11 +129,83 @@ only the following items will be picked up as test cases:
 The imported function and class, the underscored functions/methods, and the
 methods inherited from a parent class, are all ignored.
 
+### Enhanced output via the Spec class
+
+As with some other spec-style tools, `spec` provides a means for nesting your
+test "contexts" so they display nicely during test runs. Just use the `Spec`
+class as your primary superclass and inner classes will get parsed
+automatically.
+
+For example:
+
+```python
+from spec import Spec
+
+class ClassUnderTest(Spec):
+    def it_behaves_like_this(self):
+        # ...
+
+    class init:
+        "__init__"
+        def takes_arg1(self):
+            # ...
+
+        def takes_arg2(self):
+            # ...
+```
+
+The above results in output like so:
+
+    Class under test
+    - it behaves like this
+    
+        __init__
+        - takes arg1
+        - takes arg2
+
+This indentation makes output even easier to follow & helps keep things
+organized.
+
+#### Access to outer classes
+
+Inner classes may access their outer classes' state (i.e. to take advantage of
+`setup` methods) by accessing `self.parent`, which implicitly instantiates a
+copy of the wrapping class and calls its `setup` method, then returns the
+instance. E.g.:
+
+```python
+class OuterClass(Spec):
+    def setup(self):
+        self.x = 'y'
+
+    def top_level_test(self):
+        assert self.x == 'y' # works fine, of course
+
+    class about_a_method_or_something:
+        def some_inner_test_here(self):
+            assert self.parent.x == 'y' # tada
+```
+
+**Note**: `self.parent` instantiates and calls `setup` every time it is
+accessed; if you have an expensive `setup` in the outer class being accessed,
+consider assigning the result to a variable first, perhaps in the inner class'
+own `setup`, e.g.:
+
+```python
+class Outer(Spec):
+    def setup(self):
+        self.x = 'y'
+
+    class inner:
+        def setup(self):
+            self.x = self.parent.x
+```
+
 ### Usage tips
 
 Following from `spec`-the-tool's discovery algorithm, and `spec`-the-plugin's
-name transformation, we suggest the following for both readable code and test
-output:
+name transformation, we suggest the following for both readable code and
+readable test output:
 
 * Store tests in `tests/`, with whatever file-by-file organization you like
   best;
