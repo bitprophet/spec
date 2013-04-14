@@ -166,6 +166,31 @@ The above results in output like so:
 This indentation makes output even easier to follow & helps keep things
 organized.
 
+#### Accessing outer classes from inner ones
+
+Frequently, you may have a useful `setup` method in your outer class, and wish
+to access objects attached to `self` from inner classes. As of Spec 0.11.0 this
+is now possible and is quite transparent; failed attribute lookups will check
+an instantiated + setup'd copy of the outer class:
+
+```python
+class MainClass(Spec):
+    def setup(self):
+        self.x = 'y'
+
+    def outer_test(self):
+        assert self.x == 'y'
+
+    class some_inner_class:
+        def inner_test(self):
+            # Here, because some_inner_class has no real 'x' attribute, we end
+            # up seeing the outer class' value.
+            assert self.x == 'y'
+```
+
+Right now this support is pretty basic and assumes your setup methods are
+literally named `setup`, not `setUp` or whatnot. This will likely improve in
+the future.
 
 ### Usage tips
 
