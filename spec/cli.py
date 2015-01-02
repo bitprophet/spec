@@ -105,8 +105,8 @@ class SpecSelector(nose.selector.Selector):
             return False
         # Only test for mro on new-style classes. (inner old-style classes lack
         # it.)
-        if hasattr(cls, 'mro') and callable(cls.mro):
-            candidates = list(reversed(cls.mro()))[:-1]
+        if hasattr(cls, '__mro__'):
+            candidates = list(reversed(cls.__mro__))[:-1]
             for candidate in candidates:
                 if hasattr(candidate, method.__name__):
                     return False
