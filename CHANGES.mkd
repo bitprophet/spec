@@ -1,5 +1,11 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
+
+## 0.11.3
+### (2015.01.02)
+
+* Use `__mro__` instead of `mro()` in hopes of appeasing PyPy 2.4.
+
 ## 0.11.2
 ### (2014.12.10)
 
