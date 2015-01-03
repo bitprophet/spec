@@ -1,5 +1,29 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
+## 0.11.2
+### (2014.12.10)
+
+* Update license file (which had been initialized as BSD) to be consistent with the README and packaging metadata (which said MIT). Bluh. Thanks to Eduardo Téllez for the catch.
+
+## 0.11.1
+### (2013.04.14)
+
+* Fix a bug re: using `@trap` under Python 3
+
+## 0.11.0
+### (2013.04.14)
+
+* Update Nose dependency links in `setup.py`
+* Fix #30: allow access to outer/parent classes within nested classes (when
+  using classes as a visual nesting mechanism).
+* Also document the class nesting mechanism (despite it being around for quite
+  some time...)
+
+## 0.10.0
+### (2013.03.15)
+
+* Python 3 support!
+
 ## 0.9.7
 ### (2012.07.12)
 
