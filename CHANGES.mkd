@@ -1,8 +1,10 @@
 Crappy by-hand changelog until we set up proper Sphinx docs :)
 
-## 0.11.4
+## 1.0.0
 ### (2015.03.12)
 
+* Bump to 1.0 because it's been out for some time & I can't afford major
+  backwards incompat changes because of that - so being pre-1.0 is silly.
 * Don't accidentally discard return values of functions wrapped with `@trap`.
 * Offer an improved version of `nose.tools.eq_` which prints both `str()` and
   `repr()` style output of the compared strings.
