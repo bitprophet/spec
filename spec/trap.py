@@ -73,7 +73,7 @@ def trap(func):
         my_stdout, sys.stdout = sys.stdout, CarbonCopy(cc=sys.stdall)
         my_stderr, sys.stderr = sys.stderr, CarbonCopy(cc=sys.stdall)
         try:
-            ret = func(*args, **kwargs)
+            return func(*args, **kwargs)
         finally:
             sys.stdout = my_stdout
             sys.stderr = my_stderr
