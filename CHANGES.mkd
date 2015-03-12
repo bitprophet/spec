@@ -4,6 +4,8 @@ Crappy by-hand changelog until we set up proper Sphinx docs :)
 ### (2015.03.12)
 
 * Don't accidentally discard return values of functions wrapped with `@trap`.
+* Offer an improved version of `nose.tools.eq_` which prints both `str()` and
+  `repr()` style output of the compared strings.
 
 ## 0.11.3
 ### (2015.01.02)
