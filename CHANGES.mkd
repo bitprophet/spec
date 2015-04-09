@@ -1,4 +1,9 @@
-Crappy by-hand changelog until we set up proper Sphinx docs :)
+## 1.1.0
+### (2015.??.??)
+
+* Calculate runtime of tests and add display of same (non-colorized, to stand
+  out better from the colorized test names themselves). This uses the 'status'
+  field of test display methods, which didn't seem to be used much previously.
 
 ## 1.0.0
 ### (2015.03.12)

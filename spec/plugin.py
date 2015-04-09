@@ -275,7 +275,7 @@ class SpecOutputStream(OutputStream):
             name = "- %s" % s
             paren = (" (%s)" % status) if status else ""
             indent = getattr(self, '_indent', "")
-            self.print_line(indent + color_func(name + paren))
+            self.print_line(indent + color_func(name) + paren)
 
 
 
@@ -370,9 +370,12 @@ class SpecPlugin(Plugin):
             self.current_context = context
 
         self.stream.off()
+        test._starttime = time.time()
 
     def addSuccess(self, test):
-        self._print_spec('ok', test)
+        runtime = round(time.time() - test._starttime, 2)
+        status = "{0}s".format(runtime) if runtime >= 0.1 else None
+        self._print_spec('ok', test, status)
 
     def addFailure(self, test, err):
         self._print_spec('failure', test, '')
