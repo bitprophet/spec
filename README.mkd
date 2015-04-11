@@ -15,6 +15,7 @@ Specifically, `spec` provides:
 
 * Colorized, specification style output
 * Colorized tracebacks and summary
+* Optional timing display for slow tests
 * Test-running CLI tool which enables useful non-default options and implements
   relaxed test discovery for less `test_annoying.py:TestBoilerplate.test_code`
   and more `readable.py:Classes.and_methods`.
@@ -249,6 +250,7 @@ expose these new additional options/flags:
   [skipped](http://nose.readthedocs.org/en/latest/plugins/skip.html) tests are
   yellow.
 * `--spec-doctests`: enables (experimental) support for doctests.
+* `--with-timing`: enables timing display for tests that take >= 0.1s to run.
 
 
 ## Why would I want to use it?

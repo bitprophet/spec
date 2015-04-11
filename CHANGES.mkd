@@ -5,6 +5,8 @@
   out better from the colorized test names themselves). This uses the 'status'
   field of test display methods, which didn't seem to be used much previously.
 
+  Use the new `--with-timing` flag to enable this feature.
+
 ## 1.0.0
 ### (2015.03.12)
 
