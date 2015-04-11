@@ -327,6 +327,8 @@ class SpecPlugin(Plugin):
         parser.add_option('--no-detailed-errors', action='store_false',
                           dest='detailedErrors',
                           help="Force detailed errors off")
+        parser.add_option('--with-timing', action='store_true',
+                          help="Display timing info for slow (>=0.1s) tests")
 
     def configure(self, options, config):
         # Configure
@@ -335,6 +337,7 @@ class SpecPlugin(Plugin):
         if options.enable_plugin_specplugin:
             options.verbosity = max(options.verbosity, 2)
         self.spec_doctests = options.spec_doctests
+        self.show_timing = options.with_timing
         # Color setup
         for label, color in list({
             'error': 'red',
@@ -374,7 +377,10 @@ class SpecPlugin(Plugin):
 
     def addSuccess(self, test):
         runtime = round(time.time() - test._starttime, 2)
-        status = "{0}s".format(runtime) if runtime >= 0.1 else None
+        if runtime >= 0.1 and self.show_timing:
+            status = "{0}s".format(runtime)
+        else:
+            status = None
         self._print_spec('ok', test, status)
 
     def addFailure(self, test, err):
