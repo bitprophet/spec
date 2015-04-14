@@ -250,7 +250,10 @@ expose these new additional options/flags:
   [skipped](http://nose.readthedocs.org/en/latest/plugins/skip.html) tests are
   yellow.
 * `--spec-doctests`: enables (experimental) support for doctests.
-* `--with-timing`: enables timing display for tests that take >= 0.1s to run.
+* `--with-timing`: enables timing display for tests that take >=
+  `TIMING_THRESHOLD` (see below) to run.
+* `--timing-threshold`: configuration of timing threshold (in seconds) for
+  `--with-timing`. Defaults to 0.1.
 
 
 ## Why would I want to use it?

@@ -1,3 +1,9 @@
+## 1.2.0
+### (2015.04.14)
+
+* Add `--timing-threshold` option for configuring the threshold of
+  `--with-timing`.
+
 ## 1.1.0
 ### (2015.04.11)
 

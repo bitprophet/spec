@@ -328,7 +328,12 @@ class SpecPlugin(Plugin):
                           dest='detailedErrors',
                           help="Force detailed errors off")
         parser.add_option('--with-timing', action='store_true',
-                          help="Display timing info for slow (>=0.1s) tests")
+                          help="Display timing info for slow tests")
+        parser.add_option('--timing-threshold',
+                          metavar="SECONDS",
+                          type=float,
+                          default=0.1,
+                          help="Number (float) of seconds above which to display test runtime. Default: 0.1")
 
     def configure(self, options, config):
         # Configure
@@ -338,6 +343,7 @@ class SpecPlugin(Plugin):
             options.verbosity = max(options.verbosity, 2)
         self.spec_doctests = options.spec_doctests
         self.show_timing = options.with_timing
+        self.timing_threshold = options.timing_threshold
         # Color setup
         for label, color in list({
             'error': 'red',
@@ -377,7 +383,7 @@ class SpecPlugin(Plugin):
 
     def addSuccess(self, test):
         runtime = round(time.time() - test._starttime, 2)
-        if runtime >= 0.1 and self.show_timing:
+        if runtime >= self.timing_threshold and self.show_timing:
             status = "{0}s".format(runtime)
         else:
             status = None
