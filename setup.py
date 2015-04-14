@@ -1,8 +1,14 @@
 from setuptools import setup, find_packages
 
+# Version info -- read without importing
+_locals = {}
+with open('spec/_version.py') as fp:
+    exec(fp.read(), None, _locals)
+version = _locals['__version__']
+
 setup(
     name='spec',
-    version="1.2.0",
+    version=version,
     description='Specification-style output for nose',
     author='Jeff Forcier',
     author_email='jeff@bitprophet.org',
