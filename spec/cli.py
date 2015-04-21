@@ -72,7 +72,10 @@ class SpecSelector(nose.selector.Selector):
         module = inspect.getmodule(class_)
         valid = (
             module in self._valid_modules
-            or module.__file__ in self._valid_named_modules
+            or (
+                hasattr(module, '__file__')
+                and module.__file__ in self._valid_named_modules
+            )
         )
         return valid and not private(class_)
 

@@ -1,3 +1,9 @@
+## 1.2.1
+## (2015.MM.DD)
+
+* Correctly skip over modules lacking a `__file__` attribute (such as Python
+  3's builtin `_io` module) during test discovery.
+
 ## 1.2.0
 ### (2015.04.14)
 
