@@ -1,8 +1,10 @@
 ## 1.2.1
 ## (2015.MM.DD)
 
-* Correctly skip over modules lacking a `__file__` attribute (such as Python
-  3's builtin `_io` module) during test discovery.
+* Skip (instead of blowing up on) modules lacking a `__file__` attribute (such
+  as Python 3's builtin `_io` module) during test discovery.
+* Handle a map expression more appropriately under Python 3 so `--tests=xxx`
+  actually works instead of silently selecting no tests.
 
 ## 1.2.0
 ### (2015.04.14)

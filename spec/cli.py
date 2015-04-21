@@ -23,7 +23,7 @@ class SpecSelector(nose.selector.Selector):
         super(SpecSelector, self).__init__(*args, **kwargs)
         self._valid_modules = []
         # Handle --tests=
-        self._valid_named_modules = map(os.path.abspath, self.config.testNames)
+        self._valid_named_modules = list(map(os.path.abspath, self.config.testNames))
         self._valid_classes = []
 
     def wantDirectory(self, dirname):
