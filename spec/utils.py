@@ -19,7 +19,8 @@ def class_members(obj):
 def my_getattr(self, name):
     if not self._parent_inst:
         parent = self._parent()
-        parent.setup()
+        if hasattr(parent, 'setup') and callable(getattr(parent, 'setup')):
+            parent.setup()
         self._parent_inst = parent
     return getattr(self._parent_inst, name)
 
