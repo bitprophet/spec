@@ -204,25 +204,28 @@ readable test output:
 * Within files, import the classes under test normally, e.g. `from mymodule
   import MyClass`;
 * Name the test classes identically, but with a trailing underscore to avoid
-  name collisions, e.g. `class MyClass_(object): [...]`
+  name collisions, and inheriting from the `Spec` class, e.g. `class MyClass_(Spec): [...]`
 * Name their methods like English sentences, e.g. `def has_attribute_X(self):
   [...]`.
+* Tests not yet filled out should call the `skip` function, which raises a
+  "skip this test" exception Nose handles correctly.
 
 For example:
 
 ```python
+from spec import Spec, skip
 from mypackage import MyClass, MyOtherClass
 
-class MyClass_(object):
+class MyClass_(Spec):
     def has_attribute_A(self):
-        pass
+        skip()
 
-class MyOtherClass_(object):
+class MyOtherClass_(Spec):
     def also_has_attribute_A(self):
-        pass
+        skip()
 
-    def has_attribute_B(self):
-        pass
+    def has_attribute_B(Spec):
+        skip()
 ```
 
 tests as:
@@ -258,7 +261,9 @@ expose these new additional options/flags:
 
 ## Why would I want to use it?
 
-Specification-style output can make large test suites easier to read, and like any other BDD tool, it's more about framing the way we think about (and view) our tests, and less about introducing new technical methods for writing them.
+Specification-style output can make large test suites easier to read, and like
+any other BDD tool, it's more about framing the way we think about (and view)
+our tests, and less about introducing new technical methods for writing them.
 
 
 ## Where did it come from?
