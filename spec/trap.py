@@ -21,7 +21,7 @@ class CarbonCopy(IO):
     """
     # NOTE: because StringIO.StringIO on Python 2 is an old-style class we
     # cannot use super() :(
-    def __init__(self, buffer=b'', cc=None):
+    def __init__(self, buffer=b'', cc=None, encoding=None):
         """
         If ``cc`` is given and is a file-like object or an iterable of same,
         it/they will be written to whenever this instance is written to.
@@ -32,12 +32,21 @@ class CarbonCopy(IO):
         elif hasattr(cc, 'write'):
             cc = [cc]
         self.cc = cc
+        if encoding is None:
+            if self.cc and hasattr(self.cc[0], 'encoding'):
+                # NOTE: sys.stdout.encoding is None in Python 2.x on Linux
+                # when locale is C/POSIX
+                encoding = self.cc[0].encoding
+        if encoding is None:
+            # Fallback to a 'null'-encoding
+            encoding = 'latin-1'
+        self.encoding = encoding
 
     def write(self, s):
         # Ensure we always write bytes. This means that wrapped code calling
         # print(<a string object>) in Python 3 will still work. Sigh.
         if not isinstance(s, six.binary_type):
-            s = s.encode('utf-8')
+            s = s.encode(self.encoding)
         # Write out to our capturing object & any CC's
         IO.write(self, s)
         for writer in self.cc:
