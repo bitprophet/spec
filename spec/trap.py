@@ -62,7 +62,7 @@ class CarbonCopy(IO):
     def getvalue(self):
         ret = IO.getvalue(self)
         if six.PY3:
-            ret = ret.decode('utf-8')
+            ret = ret.decode(self.encoding)
         return ret
 
 
