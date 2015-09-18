@@ -1,3 +1,6 @@
+import re
+from functools import partial
+
 import six
 
 from nose import SkipTest
@@ -47,3 +50,23 @@ Got:
     if (repr(result) != str(result)) or (repr(expected) != str(expected)):
         default_msg += aka
     assert result == expected, msg or default_msg
+
+
+def _assert_contains(haystack, needle, invert, escape=False):
+    """
+    Test for existence of ``needle`` regex within ``haystack``.
+
+    Say ``escape`` to escape the ``needle`` if you aren't really using the
+    regex feature & have special characters in it.
+    """
+    myneedle = re.escape(needle) if escape else needle
+    matched = re.search(myneedle, haystack, re.M)
+    if (invert and matched) or (not invert and not matched):
+        raise AssertionError("'%s' %sfound in '%s'" % (
+            needle,
+            "" if invert else "not ",
+            haystack
+        ))
+
+assert_contains = partial(_assert_contains, invert=False)
+assert_not_contains = partial(_assert_contains, invert=True)
