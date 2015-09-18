@@ -1,5 +1,5 @@
 ## 1.2.2
-### (2015.MM.DD)
+### (2015.04.23)
 
 * Fixed a bug re: inner nested classes accessing attributes defined in outer
   classes/scopes (symptom: an `AttributeError` about `setup`).
