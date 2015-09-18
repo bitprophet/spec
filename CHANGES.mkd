@@ -44,7 +44,9 @@
 ## 0.11.2
 ### (2014.12.10)
 
-* Update license file (which had been initialized as BSD) to be consistent with the README and packaging metadata (which said MIT). Bluh. Thanks to Eduardo Téllez for the catch.
+* Update license file (which had been initialized as BSD) to be consistent with
+  the README and packaging metadata (which said MIT). Bluh. Thanks to Eduardo
+  Téllez for the catch.
 
 ## 0.11.1
 ### (2013.04.14)
