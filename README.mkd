@@ -23,7 +23,7 @@ Specifically, `spec` provides:
 ## Spec-style output
 
 `spec` is a [BDD](http://behavior-driven.org)-esque
-[nose](http://nose.readthedocs.org) plugin designed to provide "specification"
+[nose](http://nose.readthedocs.io) plugin designed to provide "specification"
 style test output (similar to Java's
 [TestDox](http://agiledox.sourceforge.net/) or Ruby's
 [RSpec](https://www.relishapp.com/rspec)). Spec-style output provides a more
@@ -250,7 +250,7 @@ expose these new additional options/flags:
   verbose format.)
 * `--no-spec-color`: disables color output. Normally, successes are green,
   failures/errors are red, and
-  [skipped](http://nose.readthedocs.org/en/latest/plugins/skip.html) tests are
+  [skipped](http://nose.readthedocs.io/en/latest/plugins/skip.html) tests are
   yellow.
 * `--spec-doctests`: enables (experimental) support for doctests.
 * `--with-timing`: enables timing display for tests that take >=
@@ -279,7 +279,7 @@ This version of the plugin was created and distributed by Jeff Forcier, &copy;
 [similar](https://github.com/unpluggd/pinocchio/commit/de30d5f7868280a2b9e3545c48e68dd0d9a343a0)
 [changes](https://github.com/bitprophet/rudolf/commit/7c872e7deeff622de62a439b8e4dd807047c095e).
 It also fixes a handful of bugs such as broken
-[SkipTest](http://nose.readthedocs.org/en/latest/plugins/skip.html)
+[SkipTest](http://nose.readthedocs.io/en/latest/plugins/skip.html)
 compatibility under Nose 1.x, and then adds some additional functionality on
 top (most notably the `spec` command-line tool.)
 
