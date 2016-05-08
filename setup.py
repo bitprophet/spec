@@ -15,7 +15,7 @@ setup(
     url='https://github.com/bitprophet/spec',
     license='MIT',
     packages=find_packages(),
-    install_requires=['nose>=1.3', 'six'],
+    install_requires=['nose>=1.3,<2.0', 'six<2.0'],
     dependency_links=[
         'https://github.com/nose-devs/nose/tarball/c0f777e488337dc7dde933453799986c46b37deb#egg=nose-1.3.0',
     ],
