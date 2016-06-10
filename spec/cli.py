@@ -20,15 +20,11 @@ def private(obj):
 
 class SpecSelector(nose.selector.Selector):
     def __init__(self, *args, **kwargs):
-        self._with_inherited = kwargs.has_key("spec_with_inherited") and kwargs["spec_with_inherited"]
-        self._with_decorators = kwargs.has_key("spec_with_decorators") and kwargs["spec_with_decorators"]
-        self._with_decorators_only = kwargs.has_key("spec_with_decorators_only") and kwargs["spec_with_decorators_only"]
-        self._with_undefined = kwargs.has_key("spec_with_undefined") and kwargs["spec_with_undefined"]
+        self._with_inherited = kwargs.pop("spec_with_inherited", False)
+        self._with_decorators = kwargs.pop("spec_with_decorators", False)
+        self._with_decorators_only = kwargs.pop("spec_with_decorators_only", False)
+        self._with_undefined = kwargs.pop("spec_with_undefined", False)
 
-        if kwargs.has_key("spec_with_inherited"): del kwargs["spec_with_inherited"]
-        if kwargs.has_key("spec_with_decorators"): del kwargs["spec_with_decorators"]
-        if kwargs.has_key("spec_with_decorators_only"): del kwargs["spec_with_decorators_only"]
-        if kwargs.has_key("spec_with_undefined"): del kwargs["spec_with_undefined"]
         if self._with_decorators_only and not self._with_decorators:
             self._with_decorators = True
 
