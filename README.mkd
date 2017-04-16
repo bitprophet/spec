@@ -1,5 +1,8 @@
 # spec
 
+[![Build
+Status](https://secure.travis-ci.org/bitprophet/spec.png?branch=master)](http://travis-ci.org/bitprophet/spec)
+
 ## What is it?
 
 `spec` is a Python (2.6+ and 3.3+) testing tool that turns this:
