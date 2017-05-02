@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 import re
 from functools import partial
 
@@ -5,7 +7,9 @@ import six
 
 from nose import SkipTest
 # Gets us eq_, ok_, etc
+# TODO: see what I or others are using here and make explicit, ugh
 from nose.tools import *
+from nose.tools import ok_ as upstream_ok_
 
 from spec.plugin import SpecPlugin
 from spec.cli import main
@@ -47,9 +51,30 @@ Expected:
 Got:
 %(result)s
 """ % params
-    if (repr(result) != str(result)) or (repr(expected) != str(expected)):
+    if (
+        (repr(result) != six.text_type(result)) or
+        (repr(expected) != six.text_type(expected))
+    ):
         default_msg += aka
-    assert result == expected, msg or default_msg
+    assertion_msg = msg or default_msg
+    # This assert will bubble up to Nose's failure handling, which at some
+    # point calls explicit str() - which will UnicodeDecodeError on any non
+    # ASCII text.
+    # To work around this, we make sure Unicode strings become bytestrings
+    # beforehand, with explicit encode.
+    if isinstance(assertion_msg, six.text_type):
+        assertion_msg = assertion_msg.encode('utf-8')
+    assert result == expected, assertion_msg
+
+
+# Unicode-friendlier ok_
+def ok_(assertion, msg=None):
+    if msg is not None:
+        # Same as in eq_ above re: need to correctly encode before nose calls
+        # str()...
+        if isinstance(msg, six.text_type):
+            msg = msg.encode('utf-8')
+    upstream_ok_(assertion, msg)
 
 
 def _assert_contains(haystack, needle, invert, escape=False):

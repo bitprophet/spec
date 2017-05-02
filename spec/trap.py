@@ -36,7 +36,7 @@ class CarbonCopy(IO):
     def write(self, s):
         # Ensure we always write bytes. This means that wrapped code calling
         # print(<a string object>) in Python 3 will still work. Sigh.
-        if not isinstance(s, six.binary_type):
+        if isinstance(s, six.text_type):
             s = s.encode('utf-8')
         # Write out to our capturing object & any CC's
         IO.write(self, s)
@@ -52,7 +52,7 @@ class CarbonCopy(IO):
     # Make sure we always hand back strings, even on Python 3
     def getvalue(self):
         ret = IO.getvalue(self)
-        if six.PY3:
+        if isinstance(ret, six.binary_type):
             ret = ret.decode('utf-8')
         return ret
 
