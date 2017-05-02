@@ -20,6 +20,9 @@ def my_getattr(self, name):
     if not self._parent_inst:
         parent = self._parent()
         if hasattr(parent, 'setup') and callable(getattr(parent, 'setup')):
+            # TODO: how to call higher-up methods with lower-down selves? can't
+            # even manually rebind because there's no real inheritance going
+            # on. (CAN there be any inheritance going on?)
             parent.setup()
         self._parent_inst = parent
     return getattr(self._parent_inst, name)
