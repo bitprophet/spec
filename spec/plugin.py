@@ -29,10 +29,10 @@ from nose.plugins.xunit import format_exception
 ## Functions for constructing specifications based on nose testing objects.
 ################################################################################
 
-def dispatch_on_type(dispatch_table, instance):
+def dispatch_on_type(dispatch_table, instance, **args):
     for type, func in dispatch_table:
         if type is True or isinstance(instance, type):
-            return func(instance)
+            return func(instance, **args)
 
 
 def remove_leading(needle, haystack):
@@ -117,43 +117,51 @@ def camelcase2spec(name):
             remove_leading_and_trailing('Test', name)))
 
 
-def camelcaseDescription(object):
-    description = object.__doc__ or camelcase2spec(object.__name__)
-    return description.strip()
+def camelcaseDescription(object, **args):
+    return doc_or_name(object.__doc__, object.__name__, lambda name: camelcase2spec(name), **args)
 
 
-def underscoredDescription(object):
-    return object.__doc__ or underscored2spec(object.__name__).capitalize()
+def underscoredDescription(object, **args):
+    return doc_or_name(object.__doc__, object.__name__, lambda name: underscored2spec(name).capitalize(), **args)
 
 
-def doctestContextDescription(doctest):
+def doctestContextDescription(doctest, **args):
     return doctest._dt_test.name
 
 
-def noseMethodDescription(test):
-    return test.method.__doc__ or underscored2spec(test.method.__name__)
+def noseMethodDescription(test, **args):
+    return doc_or_name(test.method.__doc__, test.method.__name__, lambda name: underscored2spec(name), **args)
 
 
-def unittestMethodDescription(test):
+def doc_or_name(doc, name, func, **args):
+    description = doc
+    if not description:
+        description = name
+        if not args.get('no_humanification', False):
+            description = func(name)
+    return description
+
+
+def unittestMethodDescription(test, **args):
     if test._testMethodDoc is None:
-        return underscored2spec(test._testMethodName)
+        return doc_or_name(test._testMethodDoc, test._testMethodName, lambda name: underscored2spec(name), **args)
     else:
         description = test._testMethodDoc.split("\n")
         return "".join([text.strip() for text in description])
 
 
-def noseFunctionDescription(test):
+def noseFunctionDescription(test, **args):
     # Special case for test generators.
     if test.descriptor is not None:
         if hasattr(test.test, 'description'):
             return test.test.description
         return "holds for %s" % ', '.join(map(six.text_type, test.arg))
-    return test.test.__doc__ or underscored2spec(test.test.__name__)
+    return doc_or_name(test.test.__doc__, test.test.__name__, lambda name: underscored2spec(name), **args)
 
 
 # Different than other similar functions, this one returns a generator
 # of specifications.
-def doctestExamplesDescription(test):
+def doctestExamplesDescription(test, **args):
     for ex in test._dt_test.examples:
         source = ex.source.replace("\n", " ")
         want = None
@@ -168,17 +176,17 @@ def doctestExamplesDescription(test):
             yield "%s %s" % (source.strip(), want.strip())
 
 
-def testDescription(test):
+def testDescription(test, **args):
     supported_test_types = [
         (nose.case.MethodTestCase, noseMethodDescription),
         (nose.case.FunctionTestCase, noseFunctionDescription),
         (doctest.DocTestCase, doctestExamplesDescription),
         (unittest.TestCase, unittestMethodDescription),
     ]
-    return dispatch_on_type(supported_test_types, test.test)
+    return dispatch_on_type(supported_test_types, test.test, **args)
 
 
-def contextDescription(context):
+def contextDescription(context, **args):
     supported_context_types = [
         (types.ModuleType, underscoredDescription),
         (types.FunctionType, underscoredDescription),
@@ -192,7 +200,7 @@ def contextDescription(context):
             (types.ClassType, camelcaseDescription),
         ]
 
-    return dispatch_on_type(supported_context_types, context)
+    return dispatch_on_type(supported_context_types, context, **args)
 
 
 def testContext(test):
@@ -264,11 +272,11 @@ class SpecOutputStream(OutputStream):
             self.print_context(context._parent)
         # Adjust indentation depth
         self._depth = depth(context)
-        self.print_line("\n%s%s" % (self._indent, contextDescription(context)))
+        self.print_line("\n%s%s" % (self._indent, contextDescription(context, no_humanification=self.no_humanification)))
         context._printed = True
 
     def print_spec(self, color_func, test, status=None):
-        spec = testDescription(test).strip()
+        spec = testDescription(test, no_humanification=self.no_humanification).strip()
         if not isinstance(spec, types.GeneratorType):
             spec = [spec]
         for s in spec:
@@ -334,6 +342,8 @@ class SpecPlugin(Plugin):
                           type=float,
                           default=0.1,
                           help="Number (float) of seconds above which to display test runtime. Default: 0.1")
+        parser.add_option('--no-humanification', action='store_true',
+                          help="Do not modify class or function names")
 
     def configure(self, options, config):
         # Configure
@@ -344,6 +354,7 @@ class SpecPlugin(Plugin):
         self.spec_doctests = options.spec_doctests
         self.show_timing = options.with_timing
         self.timing_threshold = options.timing_threshold
+        self.no_humanification = options.no_humanification
         # Color setup
         for label, color in list({
             'error': 'red',
@@ -370,6 +381,7 @@ class SpecPlugin(Plugin):
 
     def setOutputStream(self, stream):
         self.stream = SpecOutputStream(stream, open(os.devnull, 'w'))
+        self.stream.no_humanification = self.no_humanification
         return self.stream
 
     def beforeTest(self, test):
