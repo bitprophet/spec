@@ -518,6 +518,8 @@ class SpecPlugin(Plugin):
         self.stream.print_context(context)
 
     def _print_spec(self, color, test, status=None):
-        if isinstance(test.test, doctest.DocTestCase) and not self.spec_doctests:
+        # If setUp() fails during nose.suite.run(), there is no test attribute
+        if not hasattr(test, 'test') or \
+           isinstance(test.test, doctest.DocTestCase) and not self.spec_doctests:
             return
         self.stream.print_spec(self.color[color], test, status)
