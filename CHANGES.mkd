@@ -1,8 +1,10 @@
-## 1.x.x
-### (YYYY.MM.DD)
+## 1.4.1
+### (2017..DD)
 
 * Fix detection of failing `setUp()` methods so reporting is correct, instead
   of crashing. Thanks to ``@bendikro``!
+* Fix issue with calling ``strip()`` on test descriptions when the test is
+  generator-driven. Credit: ``@AFriemann``.
 
 ## 1.4.0
 ### (2017.05.02)
