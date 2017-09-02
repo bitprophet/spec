@@ -1,3 +1,9 @@
+## 1.x.x
+### (YYYY.MM.DD)
+
+* Fix detection of failing `setUp()` methods so reporting is correct, instead
+  of crashing. Thanks to ``@bendikro``!
+
 ## 1.4.0
 ### (2017.05.02)
 
