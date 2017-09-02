@@ -268,9 +268,9 @@ class SpecOutputStream(OutputStream):
         context._printed = True
 
     def print_spec(self, color_func, test, status=None):
-        spec = testDescription(test).strip()
+        spec = testDescription(test)
         if not isinstance(spec, types.GeneratorType):
-            spec = [spec]
+            spec = [spec.strip()]
         for s in spec:
             name = "- %s" % s
             paren = (" (%s)" % status) if status else ""
