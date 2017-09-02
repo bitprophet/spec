@@ -1,5 +1,5 @@
 ## 1.4.1
-### (2017..DD)
+### (2017.09.02)
 
 * Fix detection of failing `setUp()` methods so reporting is correct, instead
   of crashing. Thanks to ``@bendikro``!
