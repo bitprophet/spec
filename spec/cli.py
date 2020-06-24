@@ -20,6 +20,14 @@ def private(obj):
 
 class SpecSelector(nose.selector.Selector):
     def __init__(self, *args, **kwargs):
+        self._with_inherited = kwargs.pop("spec_with_inherited", False)
+        self._with_decorators = kwargs.pop("spec_with_decorators", False)
+        self._with_decorators_only = kwargs.pop("spec_with_decorators_only", False)
+        self._with_undefined = kwargs.pop("spec_with_undefined", False)
+
+        if self._with_decorators_only and not self._with_decorators:
+            self._with_decorators = True
+
         super(SpecSelector, self).__init__(*args, **kwargs)
         self._valid_modules = []
         # Handle --tests=
@@ -50,8 +58,11 @@ class SpecSelector(nose.selector.Selector):
         # Only use locally-defined functions
         local = inspect.getmodule(function) in self._valid_modules
         # And not ones which are conventionally private
-        good = local and not private(function)
-        return good
+        if not local: return False
+        if self._with_decorators_only:
+            return hasattr(function, '__test__') and function.__test__
+        if not private(function): return False
+        return True
 
     def registerGoodClass(self, class_):
         """
@@ -77,7 +88,15 @@ class SpecSelector(nose.selector.Selector):
                 and module.__file__ in self._valid_named_modules
             )
         )
-        return valid and not private(class_)
+        if not valid: return False
+        if self._with_decorators:
+            has_test_attr = hasattr(class_, '__test__')
+            if self._with_decorators_only and not has_test_attr:
+                return False
+            if has_test_attr:
+                return class_.__test__
+        else:
+            return not private(class_)
 
     def wantClass(self, class_):
         # As with modules, track the valid ones for use in method testing.
@@ -99,21 +118,34 @@ class SpecSelector(nose.selector.Selector):
         # As with functions, we want only items defined on also-valid
         # containers (classes), and only ones not conventionally private.
         valid_class = cls in self._valid_classes
-        # And ones only defined local to the class in question, not inherited
-        # from its parents. Also handle oddball 'type' cases.
-        if cls is type:
-            return False
-        # Handle 'contributed' methods not defined on class itself
-        if not hasattr(cls, method.__name__):
-            return False
-        # Only test for mro on new-style classes. (inner old-style classes lack
-        # it.)
-        if hasattr(cls, '__mro__'):
-            candidates = list(reversed(cls.__mro__))[:-1]
-            for candidate in candidates:
-                if hasattr(candidate, method.__name__):
-                    return False
+        if self._with_decorators:
+            has_test_attr = hasattr(method, '__test__')
+            if self._with_decorators_only and not has_test_attr:
+                return False
+            if has_test_attr and not method.__test__:
+                return False
+
+        if not self._with_undefined:
+            # Handle 'contributed' methods not defined on class itself
+            if not hasattr(cls, method.__name__):
+                return False
+
+        if not self._with_inherited:
+            # And ones only defined local to the class in question, not inherited
+            # from its parents. Also handle oddball 'type' cases.
+            if cls is type:
+                return False
+            # Only test for mro on new-style classes. (inner old-style classes lack
+            # it.)
+            if hasattr(cls, '__mro__'):
+                candidates = list(reversed(cls.__mro__))[:-1]
+                for candidate in candidates:
+                    if hasattr(candidate, method.__name__):
+                        return False
+
         ok = valid_class and not private(method)
+        if not ok:
+            return False
         return ok
 
 
@@ -124,10 +156,40 @@ class CustomSelector(nose.plugins.Plugin):
 
     def configure(self, options, conf):
         nose.plugins.Plugin.configure(self, options, conf)
+        self.with_inherited = options.spec_with_inherited
+        self.with_decorators = options.spec_with_tools_decorators
+        self.with_decorators_only = options.spec_with_tools_decorators_only
+        self.with_undefined = options.spec_with_undefined
 
     def prepareTestLoader(self, loader):
-        loader.selector = SpecSelector(loader.config)
+        loader.selector = SpecSelector(loader.config,
+                spec_with_inherited = self.with_inherited,
+                spec_with_decorators = self.with_decorators,
+                spec_with_decorators_only = self.with_decorators_only)
         self.loader = loader
+
+    def options(self, parser, env=os.environ):
+        nose.plugins.Plugin.options(self, parser, env)
+        parser.add_option('--with-inherited', action='store_true',
+                          dest='spec_with_inherited',
+                          default=env.get('NOSE_WITH_INHERITED'),
+                          help="Run inherited methods in specs "
+                          "[NOSE_WITH_INHERITED]")
+        parser.add_option('--with-tools-decorators', action='store_true',
+                          dest='spec_with_tools_decorators',
+                          default=env.get('NOSE_WITH_TOOLS_DECORATORS'),
+                          help="Use istest, nottest decorators from nose.tools"
+                          "[NOSE_WITH_TOOLS_DECORATORS]")
+        parser.add_option('--with-tools-decorators-only', action='store_true',
+                          dest='spec_with_tools_decorators_only',
+                          default=env.get('NOSE_WITH_TOOLS_DECORATORS_ONLY'),
+                          help="Make istest, nottest decorators from nose.tools mandatory"
+                          "[NOSE_WITH_TOOLS_DECORATORS_ONLY]")
+        parser.add_option('--with-undefined', action='store_true',
+                          dest='spec_with_undefined',
+                          default=env.get('NOSE_WITH_UNDEFINED'),
+                          help="Run methods that was not defined in spec's class, but was added later"
+                          "[NOSE_WITH_TOOLS_DECORATORS]")
 
     def loadTestsFromTestClass(self, cls):
         """
