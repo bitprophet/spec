@@ -1,5 +1,5 @@
 invoke<2.0
 invocations<2.0
 semantic_version<3.0
-wheel==0.24.0
+wheel==0.38.1
 twine==1.9.1
